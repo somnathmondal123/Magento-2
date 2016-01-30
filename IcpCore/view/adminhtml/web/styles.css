@@ -21,3 +21,12 @@
 #row_icecore_advanced_settings_manual .btn-movie {
     background-image: url("images/button-movie.png");
 }
+.a-right {
+    text-align: right;
+}
+table.icepaypaymentmethods  {
+    border: 1px solid #878787;
+}
+table.icepaypaymentmethods tr td {
+    padding: 4px !important;
+}
