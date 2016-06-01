@@ -1,23 +1,14 @@
 <?xml version="1.0"?>
-<!--
-/**
-* Icepay_IcpCore DI definitions
-*/
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
 
-    <virtualType name="Icepay\IcpCore\Model\ConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
-        <arguments>
-            <argument name="methodCodes" xsi:type="array">
-                <item name="icepay_icpcore" xsi:type="const">Icepay\IcpCore\Model\Payment::CODE</item>
-            </argument>
-        </arguments>
-    </virtualType>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="icepay_icpcore_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider</item>
+                <item name="icepay_creditcard_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\CreditCard</item>
+                <item name="icepay_ideal_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\IDeal</item>
+                <item name="icepay_paypal_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\PayPal</item>
+                <item name="icepay_giropay_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\GiroPay</item>
             </argument>
         </arguments>
     </type>

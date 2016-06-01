@@ -1,22 +1,48 @@
 <?xml version="1.0"?>
-<!--
-/**
-* Icepay_IcpCore default configuration
-*/
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Store/etc/config.xsd">
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
     <default>
+        <icepay>
+        </icepay>
         <payment>
-            <icepay_icpcore>
-                <active>0</active>
-                <model>Icepay\IcpCore\Model\Payment</model>
-                <payment_action>authorize_capture</payment_action>
-                <title>IcpCore</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
-                <cctypes>AE,VI,MC,DI,JCB</cctypes>
+            <icepay_icpcore_creditcard>
+                <active>1</active>
+                <model>Icepay\IcpCore\Model\PaymentMethod\CreditCard</model>
+                <payment_action>order</payment_action>
+                <title>Credit Card</title>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
-                <min_order_total>0.50</min_order_total>
-            </icepay_icpcore>
+                <group>icepay</group>
+            </icepay_icpcore_creditcard>
+            <icepay_icpcore_ideal>
+                <active>1</active>
+                <model>Icepay\IcpCore\Model\PaymentMethod\IDeal</model>
+                <payment_action>order</payment_action>
+                <title>Ideal</title>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <allowspecific>0</allowspecific>
+                <group>icepay</group>
+            </icepay_icpcore_ideal>
+            <icepay_icpcore_paypal>
+                <active>1</active>
+                <model>Icepay\IcpCore\Model\PaymentMethod\PayPal</model>
+                <payment_action>order</payment_action>
+                <title>PayPal</title>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <allowspecific>0</allowspecific>
+                <group>icepay</group>
+            </icepay_icpcore_paypal>
+            <icepay_icpcore_giropay>
+                <active>1</active>
+                <model>Icepay\IcpCore\Model\PaymentMethod\GiroPay</model>
+                <payment_action>order</payment_action>
+                <title>GiroPay</title>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <allowspecific>0</allowspecific>
+                <group>icepay</group>
+            </icepay_icpcore_giropay>
+
         </payment>
     </default>
 </config>
