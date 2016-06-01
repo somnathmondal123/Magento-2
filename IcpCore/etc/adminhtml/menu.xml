@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add
+                id="Icepay_IcpCore::icpcore"
+                title="ICEPAY"
+                module="Icepay_IcpCore"
+                sortOrder="50"
+                parent="Magento_Sales::sales"
+                resource="Icepay_IcpCore::icpcore"
+        />
+        <add
+                id="Icepay_IcpCore::paymentmethod"
+                title="Payment Methods"
+                module="Icepay_IcpCore"
+                sortOrder="70"
+                parent="Icepay_IcpCore::icpcore"
+                action="icpcore/paymentmethod/"
+                resource="Icepay_IcpCore::paymentmethod"
+        />
+    </menu>
+</config>
