@@ -3,8 +3,6 @@ namespace Icepay\IcpCore\Controller\Adminhtml\Paymentmethod;
 
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface;
 
 class Sync extends \Magento\Backend\App\Action
 {
@@ -41,6 +39,9 @@ class Sync extends \Magento\Backend\App\Action
         $this->issuerFactory = $issuerFactory;
         $this->_encryptor = $encryptor;
     }
+    
+    
+    //TODO:refactor
     public function execute()
     {
 
@@ -112,26 +113,18 @@ class Sync extends \Magento\Backend\App\Action
             }
         }
 
-
-//        $resultPage = $this->resultPageFactory->create();
-//        $resultPage->setActiveMenu('Icepay_IcpCore::paymentmethod');
-//        $resultPage->addBreadcrumb(__('ICEPAY'), __('ICEPAY'));
-//        $resultPage->addBreadcrumb(__('Manage Payment Methods'), __('Manage Payment Methods'));
-//        $resultPage->getConfig()->getTitle()->prepend(__('Payment Methods'));
-//        return $resultPage;
-
         $resultRedirect = $this->resultRedirectFactory->create();
         return $resultRedirect->setPath('*/*/');
 
     }
 
-    public function arrEncode($arr)
+    protected function arrEncode($arr)
     {
         return serialize($arr);
         return urlencode(serialize($arr));
     }
 
-    private function addCurrencies($arr, $currencyArr)
+    protected function addCurrencies($arr, $currencyArr)
     {
         foreach ($currencyArr as $currency) {
             array_push($arr, trim($currency));
@@ -141,6 +134,6 @@ class Sync extends \Magento\Backend\App\Action
 
     protected function _isAllowed()
     {
-        return $this->_authorization->isAllowed('Icepay_IcpCore::paymentmethod');
+        return $this->_authorization->isAllowed('Icepay_IcpCore::paymentmethod_save');
     }
 }

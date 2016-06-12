@@ -8,14 +8,8 @@ namespace Icepay\IcpCore\Model\PaymentMethod;
 
 require_once(dirname(__FILE__).'/../restapi/src/Icepay/API/Autoloader.php');
 
-//use Magento\Paypal\Model\Api\Nvp;
-//use Magento\Paypal\Model\Api\ProcessableException as ApiProcessableException;
-//use Magento\Paypal\Model\Express\Checkout as ExpressCheckout;
-//use Magento\Sales\Api\Data\OrderPaymentInterface;
-//use Magento\Sales\Model\Order\Payment;
+
 use Magento\Sales\Model\Order\Payment\Transaction;
-//use Magento\Quote\Model\Quote;
-//use Magento\Store\Model\ScopeInterface;
 
 
 class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
@@ -37,6 +31,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 
     protected $paymentMethodInformation;
 
+    protected $paymentMethod;
     /**
      * @var Transaction\BuilderInterface
      */
@@ -99,22 +94,22 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 
     private function initPaymentMethodInformation()
     {
-        $collection = $this->paymentmethodFactory
+        //TODO: refactor
+
+        $this->paymentMethod = $this->paymentmethodFactory
             ->create()
             ->getCollection()
-            ->addFieldToFilter('store_id', '1') //TODO store_id
-            ->setPageSize(1);
+            ->addFieldToFilter('store_id', '1')
+            ->addFieldToFilter('code', $this->icepayMethodCode)
+            ->setPageSize(1)->getFirstItem();
 
-        if(count($collection)> 0)
+        if($this->paymentMethod)
         {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $mt = $objectManager->create('Icepay_Webservice_Paymentmethod');
-            $pm= $collection->getFirstItem();
-            $method = $mt->loadFromArray(unserialize($pm->getRawPmData()));
+            $method = $mt->loadFromArray(unserialize($this->paymentMethod->getRawPmData()));
 
             $this->paymentMethodInformation = $method;
-            
-           // return $method;
         }
     }
 
@@ -127,12 +122,21 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function isAvailable(\Magento\Quote\Api\Data\CartInterface $quote = null)
     {
+//
+//        if (!$this->getConfigData('api_key')) {
+//            return false;
+//        }
+
+        if (!$this->isActive($quote ? $quote->getStoreId() : null)) {
+            return false;
+        }
+
         //TODO: Refactor!
         if ($quote)
         {
-            if ($this->paymentMethodInformation == null) {
-                $this->initPaymentMethodInformation();
-            }
+//            if ($this->paymentMethodInformation == null) {
+//                $this->initPaymentMethodInformation();
+//            }
 
             $pMethod = $this->paymentMethodInformation
                 ->filterByCurrency($quote->getBaseCurrencyCode())
@@ -295,6 +299,26 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
             $payment->setIsTransactionApproved(true);
         }
 
+    }
+
+
+
+    /**
+     * is active
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isActive($storeId = null)
+    {
+
+        if ($this->paymentMethod == null) {
+            $this->initPaymentMethodInformation();
+        }
+
+        if ($this->paymentMethod != null) {
+            return $this->paymentMethod->getIsActive();
+        }
     }
 
 }

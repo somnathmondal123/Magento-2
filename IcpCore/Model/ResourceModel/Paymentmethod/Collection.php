@@ -15,4 +15,6 @@ class Collection extends
         $this->_init('Icepay\IcpCore\Model\Paymentmethod',
             'Icepay\IcpCore\Model\ResourceModel\Paymentmethod');
     }
+
+    protected $_idFieldName = 'paymentmethod_id';
 }
