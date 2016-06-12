@@ -1,30 +1,25 @@
 <?php
 namespace Icepay\IcpCore\Controller\Adminhtml\Paymentmethod;
 
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\View\Result\PageFactory;
 
-class Index extends \Magento\Backend\App\Action
+class Index extends \Icepay\IcpCore\Controller\Adminhtml\Paymentmethod
 {
-    protected $resultPageFactory;
-    public function __construct(
-        Context $context,
-        PageFactory $resultPageFactory
-    ) {
-        parent::__construct($context);
-        $this->resultPageFactory = $resultPageFactory;
-    }
     public function execute()
     {
+        if ($this->getRequest()->getQuery('ajax')) {
+            $resultForward = $this->resultForwardFactory->create();
+            $resultForward->forward('grid');
+            return $resultForward;
+        }
+
         $resultPage = $this->resultPageFactory->create();
+
         $resultPage->setActiveMenu('Icepay_IcpCore::paymentmethod');
+        $resultPage->getConfig()->getTitle()->prepend(__('Payment Methods'));
         $resultPage->addBreadcrumb(__('ICEPAY'), __('ICEPAY'));
         $resultPage->addBreadcrumb(__('Manage Payment Methods'), __('Manage Payment Methods'));
-        $resultPage->getConfig()->getTitle()->prepend(__('Payment Methods'));
+
         return $resultPage;
     }
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Icepay_IcpCore::paymentmethod');
-    }
+
 }

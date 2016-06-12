@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
 <router id="admin">
-    <route id="icpcore" frontName="icpcore">
-        <module name="Icepay_IcpCore" before="Magento_Backend" />
+    <route id="icepay_icpcore" frontName="icepay_icpcore">
+        <!--<module name="Icepay_IcpCore" before="Magento_Backend" />-->
+        <module name="Icepay_IcpCore" />
     </route>
 </router>
 </config>

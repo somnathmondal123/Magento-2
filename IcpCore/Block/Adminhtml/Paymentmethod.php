@@ -7,7 +7,7 @@ class Paymentmethod extends \Magento\Backend\Block\Widget\Grid\Container
     protected function _construct()
     {
         $this->_blockGroup = 'Icepay_IcpCore';
-        $this->_controller = 'adminhtml_paymentmethod';
+        $this->_controller = 'adminhtml';
         parent::_construct();
 
         $this->removeButton('add');
@@ -15,7 +15,7 @@ class Paymentmethod extends \Magento\Backend\Block\Widget\Grid\Container
         $this->addButton(
             'sync',
             [
-                'label' => 'Sync', //$this->getAddButtonLabel(),
+                'label' => 'Sync',
                 'onclick' => 'setLocation(\'' . $this->getSyncUrl() . '\')',
                 'class' => 'add primary'
             ]

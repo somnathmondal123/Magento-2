@@ -15,7 +15,7 @@
                 module="Icepay_IcpCore"
                 sortOrder="70"
                 parent="Icepay_IcpCore::icpcore"
-                action="icpcore/paymentmethod/"
+                action="icepay_icpcore/paymentmethod/index"
                 resource="Icepay_IcpCore::paymentmethod"
         />
     </menu>
