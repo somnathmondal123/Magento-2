@@ -130,26 +130,7 @@ class GiroPay extends IcepayAbstractMethod
 
     protected $issuerFactory;
 
-
-
-    /**
-     * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
-     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
-     * @param \Magento\Payment\Helper\Data $paymentData
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Payment\Model\Method\Logger $logger
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\UrlInterface $urlBuilder
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Framework\Exception\LocalizedExceptionFactory $exception
-     * @param \Magento\Sales\Api\TransactionRepositoryInterface $transactionRepository
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-     * @param array $data
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
+    
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -162,7 +143,7 @@ class GiroPay extends IcepayAbstractMethod
         \Icepay\IcpCore\Model\PaymentmethodFactory $paymentmethodFactory,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
-        \Magento\Directory\Model\CountryFactory $countryFactory,
+        \Magento\Payment\Model\Checks\CanUseForCountry\CountryProvider $countryProvider,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -182,6 +163,7 @@ class GiroPay extends IcepayAbstractMethod
             $scopeConfig,
             $logger,
             $paymentmethodFactory,
+            $countryProvider,
             $moduleList,
             $localeDate,
             $resource,
