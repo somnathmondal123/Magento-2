@@ -64,7 +64,7 @@ class Start extends \Icepay\IcpCore\Controller\AbstractCheckout
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
-                __('Can\'t start Icepay Checkout.')
+                __('Can\'t start Icepay Checkout. '.$e->getMessage())
             );
         }
 

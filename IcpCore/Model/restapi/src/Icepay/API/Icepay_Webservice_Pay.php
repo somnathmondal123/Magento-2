@@ -238,9 +238,16 @@ class Icepay_Webservice_Pay extends Icepay_Webservice_Base {
         $result = $this->client->payment->Checkout((Array)$obj);
 
         /* store the checksum momentarily */
-		if (!isset($result->Checksum)) {
-			throw new Exception("Error creating the order");
+        if (!isset($result->Checksum)) {
+
+            if($result && isset($result->Message)) {
+                throw new Exception($result->Message);
+            }
+            else{
+                throw new Exception("Error creating the order.");
+            }
 		}
+
 		$checksum = $result->Checksum;
 		
         /* Replace the checksum in the data with secretCode to generate a new checksum */

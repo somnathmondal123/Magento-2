@@ -37,23 +37,13 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
      */
     protected $transactionBuilder;
 
+    /**
+     * @var CountryProvider
+     */
+    protected $countryProvider;
 
-//    /**
-//     * @param \Magento\Framework\Model\Context $context
-//     * @param \Magento\Framework\Registry $registry
-//     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
-//     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
-//     * @param \Magento\Payment\Helper\Data $paymentData
-//     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-//     * @param Logger $logger
-//     * @param \Magento\Framework\Module\ModuleListInterface $moduleList
-//     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
-//     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-//     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-//     * @param array $data
-//     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-//* @param Transaction\BuilderInterface $transactionBuilder
-//     */
+
+
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -63,6 +53,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
         \Icepay\IcpCore\Model\PaymentmethodFactory $paymentmethodFactory,
+        \Magento\Payment\Model\Checks\CanUseForCountry\CountryProvider $countryProvider,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
@@ -85,6 +76,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 
         $this->paymentmethodFactory = $paymentmethodFactory;
         $this->transactionBuilder = $transactionBuilder;
+        $this->countryProvider = $countryProvider;
 
         $this->_moduleList = $moduleList;
         $this->_localeDate = $localeDate;
@@ -137,10 +129,11 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 //            if ($this->paymentMethodInformation == null) {
 //                $this->initPaymentMethodInformation();
 //            }
+            $countryCode = $this->countryProvider->getCountry($quote);
 
             $pMethod = $this->paymentMethodInformation
                 ->filterByCurrency($quote->getBaseCurrencyCode())
-                ->filterByCountry('NL')
+                ->filterByCountry($countryCode)
                 ->filterByAmount($quote->getBaseGrandTotal() * 100);
 
             $available = false;

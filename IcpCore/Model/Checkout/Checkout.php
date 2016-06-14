@@ -210,6 +210,11 @@ class Checkout
     protected $_scopeConfig;
 
     /**
+     * @var CountryProvider
+     */
+    protected $countryProvider;
+
+    /**
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Customer\Model\Url $customerUrl
      * @param \Magento\Tax\Helper\Data $taxData
@@ -252,6 +257,7 @@ class Checkout
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+        \Magento\Payment\Model\Checks\CanUseForCountry\CountryProvider $countryProvider,
         AccountManagement $accountManagement,
         OrderSender $orderSender,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
@@ -273,6 +279,7 @@ class Checkout
         $this->_objectCopyService = $objectCopyService;
         $this->_checkoutSession = $checkoutSession;
         $this->_customerRepository = $customerRepository;
+        $this->countryProvider = $countryProvider;
         $this->_encryptor = $encryptor;
         $this->_messageManager = $messageManager;
         $this->orderSender = $orderSender;
@@ -373,7 +380,9 @@ class Checkout
         $issuer = $this->_quote->getPayment()->getAdditionalInformation('issuer'); //TODO: replace 'issuer' with const; + validation
 
         $checkoutLanguage = $this->getCheckoutLanguage();
-        $countryCode = $this->getMerchantCountryCode();
+        //$countryCode = $this->getMerchantCountryCode();
+
+        $countryCode = $this->countryProvider->getCountry($this->_quote);
         
         // prepare ICEPAY Payment Object
         $this->getIcepayApiPaymentObject();
@@ -463,18 +472,6 @@ class Checkout
     }
 
 
-    public function getMerchantCountryCode($store = null)
-    {
-        $countryCode = (string)$this->_scopeConfig->getValue(
-            StoreInformation::XML_PATH_STORE_INFO_COUNTRY_CODE,
-            ScopeInterface::SCOPE_STORE,
-            $store
-        );
-
-        if($countryCode == '')
-            $countryCode = 'NL';
-        return $countryCode;
-    }
 
     public function getCheckoutLanguage()
     {
@@ -485,7 +482,7 @@ class Checkout
     /**
      * Place the order when customer returned from ICEPAY
      *
-     * @return void
+     * @throws \Exception
      */
     public function place()
     {
