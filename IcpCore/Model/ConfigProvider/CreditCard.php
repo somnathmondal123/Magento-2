@@ -20,7 +20,8 @@ class CreditCard extends AbstractConfigProvider
                     'creditcard' => [
                         'paymentMethodLogoSrc' => $this->getPaymentMethodLogoSrc(),
                         'issuers' => $this->getIssuerList(),
-                        'redirectUrl' => $this->getMethodRedirectUrl()
+                        'redirectUrl' => $this->getMethodRedirectUrl(),
+                        'getPaymentMethodDisplayName' => $this->getPaymentMethodDisplayName()
                     ],
                 ],
             ],

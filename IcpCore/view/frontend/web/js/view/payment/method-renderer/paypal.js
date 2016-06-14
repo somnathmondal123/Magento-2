@@ -33,6 +33,9 @@ define(
                 return window.checkoutConfig.payment.icepay.paypal.paymentMethodLogoSrc;
             },
 
+            getPaymentMethodDisplayName: function() {
+                return window.checkoutConfig.payment.icepay.paypal.getPaymentMethodDisplayName;
+            },
 
             initObservable: function () {
 

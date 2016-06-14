@@ -20,7 +20,8 @@ class PayPal extends AbstractConfigProvider
                     'paypal' => [
                         'paymentMethodLogoSrc' => $this->getPaymentMethodLogoSrc(),
                         'issuer' => $this->getIssuerList()[0],
-                        'redirectUrl' => $this->getMethodRedirectUrl()
+                        'redirectUrl' => $this->getMethodRedirectUrl(),
+                        'getPaymentMethodDisplayName' => $this->getPaymentMethodDisplayName()
                     ],
                 ],
             ],
