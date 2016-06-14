@@ -302,7 +302,16 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
     }
 
 
-
+    public function getPaymentMethodDisplayName()
+    {
+        if($this->paymentMethodInformation == null)
+        {
+            $this->initPaymentMethodInformation();
+        }
+        return $this->paymentMethod->getDisplayName();
+    }
+    
+    
     /**
      * is active
      *

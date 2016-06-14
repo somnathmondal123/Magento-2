@@ -35,6 +35,10 @@ define(
                 return window.checkoutConfig.payment.icepay.creditcard.paymentMethodLogoSrc;
             },
 
+            getPaymentMethodDisplayName: function() {
+                return window.checkoutConfig.payment.icepay.creditcard.getPaymentMethodDisplayName;
+            },
+
 
             initObservable: function () {
                 this._super().observe(['selectedIssuer', 'issuers']);

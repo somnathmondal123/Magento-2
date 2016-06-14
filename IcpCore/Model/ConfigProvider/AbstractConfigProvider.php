@@ -71,4 +71,10 @@ class AbstractConfigProvider implements ConfigProviderInterface
         return $this->assetRepo->getUrl('Icepay_IcpCore::images/methods/'.$logoName.'.png');
     }
 
+    protected function getPaymentMethodDisplayName()
+    {
+        return $this->method->getPaymentMethodDisplayName();
+    }
+
+
 }

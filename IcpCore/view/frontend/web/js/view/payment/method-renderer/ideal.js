@@ -35,6 +35,9 @@ define(
                 return window.checkoutConfig.payment.icepay.ideal.paymentMethodLogoSrc;
             },
 
+            getPaymentMethodDisplayName: function() {
+                return window.checkoutConfig.payment.icepay.ideal.getPaymentMethodDisplayName;
+            },
 
             initObservable: function () {
                 this._super().observe(['selectedIssuer', 'idealIssuers']);

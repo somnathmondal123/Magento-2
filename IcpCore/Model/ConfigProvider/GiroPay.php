@@ -20,7 +20,8 @@ class GiroPay extends AbstractConfigProvider
                     'giropay' => [
                         'paymentMethodLogoSrc' => $this->getPaymentMethodLogoSrc(),
                         'issuer' => $this->getIssuerList()[0],
-                        'redirectUrl' => $this->getMethodRedirectUrl()
+                        'redirectUrl' => $this->getMethodRedirectUrl(),
+                        'getPaymentMethodDisplayName' => $this->getPaymentMethodDisplayName()
                     ],
                 ],
             ],

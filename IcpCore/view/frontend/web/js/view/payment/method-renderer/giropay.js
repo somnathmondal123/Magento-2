@@ -35,6 +35,9 @@ define(
                 return window.checkoutConfig.payment.icepay.giropay.paymentMethodLogoSrc;
             },
 
+            getPaymentMethodDisplayName: function() {
+                return window.checkoutConfig.payment.icepay.giropay.getPaymentMethodDisplayName;
+            },
 
             initObservable: function () {
 
