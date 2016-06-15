@@ -9,15 +9,15 @@
                 </field>
                 <field id="merchant_url_ok" translate="label" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>URL for Success</label>
-                    <!--<frontend_model>Icepay\IcpCore\Model\GenerateURL</frontend_model>-->
+                    <frontend_model>Icepay\IcpCore\Block\System\Config\Form\Field\SuccessUrlField</frontend_model>
                 </field>
                 <field id="merchant_url_err" translate="label" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>URL for Error</label>
-                    <!--<frontend_model>Icepay\IcpCore\Model\GenerateURL</frontend_model>-->
+                    <frontend_model>Icepay\IcpCore\Block\System\Config\Form\Field\ErrorUrlField</frontend_model>
                 </field>
                 <field id="merchant_url_notify" translate="label" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>URL for Postback/Notify</label>
-                    <!--<frontend_model>Icepay\IcpCore\Model\GenerateURL</frontend_model>-->
+                    <frontend_model>Icepay\IcpCore\Block\System\Config\Form\Field\PostbackUrlField</frontend_model>
                 </field>
                 <field id="icepay_step2" translate="label" type="label" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Step 2.</label>
