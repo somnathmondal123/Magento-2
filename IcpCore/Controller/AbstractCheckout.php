@@ -126,7 +126,7 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
         $quote = $this->_getQuote();
         if (!$quote->hasItems() || $quote->getHasError()) {
             $this->getResponse()->setStatusHeader(403, '1.1', 'Forbidden');
-            throw new \Magento\Framework\Exception\LocalizedException(__('We can\'t initialize Express Checkout.'));
+            throw new \Magento\Framework\Exception\LocalizedException(__('We can\'t initialize ICEPAY Checkout.'));
         }
         //TODO: _config
         if (!isset($this->_checkoutTypes[$this->_checkoutType])) {

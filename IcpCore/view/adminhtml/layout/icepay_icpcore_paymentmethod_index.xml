@@ -7,7 +7,7 @@
         <body>
             <referenceContainer name="content">
                 <uiComponent name="paymentmethod_listing"/>
-                <block class="Icepay\IcpCore\Block\Adminhtml\Paymentmethod" name="admin.block.icpcore.paymentmethod.grid.container"></block>
+                <!--<block class="Icepay\IcpCore\Block\Adminhtml\Paymentmethod" name="admin.block.icpcore.paymentmethod.grid.container"></block>-->
             </referenceContainer>
         </body>
 </page>

@@ -9,6 +9,13 @@
                 <item name="icepay_ideal_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\IDeal</item>
                 <item name="icepay_paypal_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\PayPal</item>
                 <item name="icepay_giropay_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\GiroPay</item>
+                <item name="icepay_directdebit_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\DirectDebit</item>
+                <!--<item name="icepay_giftcard_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\GiftCard</item>-->
+                <item name="icepay_mistercash_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\MisterCash</item>
+                <item name="icepay_paysafecard_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\Paysafecard</item>
+                <item name="icepay_phone_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\Phone</item>
+                <item name="icepay_sms_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\Sms</item>
+                <item name="icepay_wiretransfer_config_provider" xsi:type="object">Icepay\IcpCore\Model\ConfigProvider\WireTransfer</item>
             </argument>
         </arguments>
     </type>
