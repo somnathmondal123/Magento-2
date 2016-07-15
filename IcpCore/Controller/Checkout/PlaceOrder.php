@@ -72,13 +72,15 @@ class PlaceOrder extends \Icepay\IcpCore\Controller\AbstractCheckout
                 $e,
                 $e->getMessage()
             );
-            $this->_redirect('*/*/review');
+//            $this->_redirect('*/*/review');
+            $this->_redirect('/');
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
                 __('We can\'t place the order.')
             );
-            $this->_redirect('*/*/review');
+//            $this->_redirect('*/*/review');
+            $this->_redirect('/');
         }
     }
 

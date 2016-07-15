@@ -256,6 +256,10 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
             ->build(Transaction::TYPE_ORDER);
         $payment->addTransactionCommentsToOrder($transaction, $message);
 
+//        $stateObject->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+//        $stateObject->setStatus('pending_payment');
+//        $stateObject->setIsNotified(false);
+
 
         $order->setState($state)
             ->setStatus($status);
