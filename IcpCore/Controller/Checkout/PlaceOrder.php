@@ -29,13 +29,6 @@ class PlaceOrder extends \Icepay\IcpCore\Controller\AbstractCheckout
     public function execute()
     {
         try {
-//            if ($this->isValidationRequired() &&
-//                !$this->agreementsValidator->isValid(array_keys($this->getRequest()->getPost('agreement', [])))
-//            ) {
-//                throw new \Magento\Framework\Exception\LocalizedException(
-//                    __('Please agree to all the terms and conditions before placing the order.')
-//                );
-//            }
 
             $this->_initCheckout();
             if($this->_checkout->initIcepayResult())

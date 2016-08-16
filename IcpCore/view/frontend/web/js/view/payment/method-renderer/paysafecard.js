@@ -39,14 +39,6 @@ define(
                 return window.checkoutConfig.payment.icepay.paysafecard.getPaymentMethodDisplayName;
             },
 
-            initObservable: function () {
-
-                this.issuerCode = window.checkoutConfig.payment.icepay.paysafecard.issuer.code;
-
-                return this;
-            },
-
-
             selectPaymentMethod: function() {
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
@@ -54,13 +46,12 @@ define(
             },
 
             getData: function() {
-                return {
-                    "method": this.item.method,
-                    "po_number": null,
-                    "additional_data": {
-                        "issuer" : this.issuerCode
-                    }
-                };
+                var parent = this._super(),
+                    additionalData = {};
+
+                additionalData['issuer'] = window.checkoutConfig.payment.icepay.paysafecard.issuer.code;
+
+                return $.extend(true, parent, {'additional_data': additionalData});
             },
 
 

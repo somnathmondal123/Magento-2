@@ -38,29 +38,20 @@ define(
             getPaymentMethodDisplayName: function() {
                 return window.checkoutConfig.payment.icepay.sms.getPaymentMethodDisplayName;
             },
-
-            initObservable: function () {
-
-                this.issuerCode = window.checkoutConfig.payment.icepay.sms.issuer.code;
-
-                return this;
-            },
-
-
+            
             selectPaymentMethod: function() {
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
                 return true;
             },
-
+            
             getData: function() {
-                return {
-                    "method": this.item.method,
-                    "po_number": null,
-                    "additional_data": {
-                        "issuer" : this.issuerCode
-                    }
-                };
+                var parent = this._super(),
+                    additionalData = {};
+
+                additionalData['issuer'] = window.checkoutConfig.payment.icepay.sms.issuer.code;
+
+                return $.extend(true, parent, {'additional_data': additionalData});
             },
 
 

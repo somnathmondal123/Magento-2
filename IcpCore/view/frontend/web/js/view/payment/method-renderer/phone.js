@@ -46,8 +46,7 @@ define(
 
                 return this;
             },
-
-
+            
             selectPaymentMethod: function() {
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
@@ -55,15 +54,12 @@ define(
             },
 
             getData: function() {
-                var selectedIssuerCode = this.selectedIssuer() ? this.selectedIssuer() : null;
+                var parent = this._super(),
+                    additionalData = {};
 
-                return {
-                    "method": this.item.method,
-                    "po_number": null,
-                    "additional_data": {
-                        "issuer" : selectedIssuerCode
-                    }
-                };
+                additionalData['issuer'] = this.selectedIssuer() ? this.selectedIssuer() : null;
+
+                return $.extend(true, parent, {'additional_data': additionalData});
             },
 
 

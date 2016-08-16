@@ -36,15 +36,7 @@ define(
             getPaymentMethodDisplayName: function() {
                 return window.checkoutConfig.payment.icepay.paypal.getPaymentMethodDisplayName;
             },
-
-            initObservable: function () {
-
-                this.issuerCode = window.checkoutConfig.payment.icepay.paypal.issuer.code;
-
-                return this;
-            },
-
-
+            
             selectPaymentMethod: function() {
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
@@ -52,14 +44,12 @@ define(
             },
 
             getData: function() {
+                var parent = this._super(),
+                    additionalData = {};
 
-                return {
-                    "method": this.item.method,
-                    "po_number": null,
-                    "additional_data": {
-                        "issuer" : this.issuerCode
-                    }
-                };
+                additionalData['issuer'] = window.checkoutConfig.payment.icepay.paypal.issuer.code;
+
+                return $.extend(true, parent, {'additional_data': additionalData});
             },
 
         });
