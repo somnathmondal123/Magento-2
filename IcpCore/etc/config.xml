@@ -60,15 +60,15 @@
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_mistercash>
-            <!--<icepay_icpcore_giftcard>-->
-                <!--<active>1</active>-->
-                <!--<model>Icepay\IcpCore\Model\PaymentMethod\GiftCard</model>-->
-                <!--<payment_action>order</payment_action>-->
-                <!--<title>Gift Card</title>-->
-                <!--<api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>-->
-                <!--<allowspecific>0</allowspecific>-->
-                <!--<group>icepay</group>-->
-            <!--</icepay_icpcore_giftcard>-->
+            <icepay_icpcore_giftcard>
+                <active>1</active>
+                <model>Icepay\IcpCore\Model\PaymentMethod\GiftCard</model>
+                <payment_action>order</payment_action>
+                <title>Gift Card</title>
+                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <allowspecific>0</allowspecific>
+                <group>icepay</group>
+            </icepay_icpcore_giftcard>
             <icepay_icpcore_paysafecard>
                 <active>1</active>
                 <model>Icepay\IcpCore\Model\PaymentMethod\Paysafecard</model>

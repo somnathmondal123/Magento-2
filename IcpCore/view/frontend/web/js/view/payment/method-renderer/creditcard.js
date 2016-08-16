@@ -55,17 +55,14 @@ define(
                 checkoutData.setSelectedPaymentMethod(this.item.method);
                 return true;
             },
-
+            
             getData: function() {
-                var selectedIssuerCode = this.selectedIssuer() ? this.selectedIssuer() : null;
+                var parent = this._super(),
+                    additionalData = {};
 
-                return {
-                    "method": this.item.method,
-                    "po_number": null,
-                    "additional_data": {
-                        "issuer" : selectedIssuerCode
-                    }
-                };
+                additionalData['issuer'] = this.selectedIssuer() ? this.selectedIssuer() : null;
+
+                return $.extend(true, parent, {'additional_data': additionalData});
             },
 
         });

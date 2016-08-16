@@ -8,8 +8,10 @@ namespace Icepay\IcpCore\Model\PaymentMethod;
 
 require_once(dirname(__FILE__).'/../restapi/src/Icepay/API/Autoloader.php');
 
-
+use Magento\Framework\Webapi\Exception;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
+use Magento\Framework\DataObject;
 
 
 class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
@@ -184,12 +186,21 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 
     public function assignData(\Magento\Framework\DataObject $data)
     {
-        parent::assignData($data);
+        $additionalData = $data->getAdditionalData();
 
-        if (is_array($data) || $data instanceof \Magento\Framework\DataObject) {
-            $this->getInfoInstance()->setAdditionalInformation('issuer', $data['issuer']);
+        if (!is_array($data->getAdditionalData())) {
+            return $this;
         }
+        $additionalData = new DataObject($additionalData);
+
+        $infoInstance = $this->getInfoInstance();
+        $infoInstance->setAdditionalInformation(
+            'issuer',
+            $additionalData->getData('issuer')
+        );
         return $this;
+
+
     }
 
     /**
@@ -243,10 +254,13 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         $formattedPrice = $order->getBaseCurrency()->formatTxt($amount);
         if ($payment->getIsTransactionPending()) {
             $message = __('The ordering amount of %1 is pending approval on the payment gateway.', $formattedPrice);
-            $state = \Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW;
-        } else {
+            $state = \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT;
+            $order->setIsNotified(false);
+        } else if ($payment->getIsTransactionApproved())
+        {
             $message = __('Ordered amount of %1', $formattedPrice);
         }
+        else throw new \Exception('Invalid order status sent');
 
         $payment->setParentTransactionId($orderTransactionId);
 
@@ -261,8 +275,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
 //        $stateObject->setIsNotified(false);
 
 
-        $order->setState($state)
-            ->setStatus($status);
+        $order->setState($state)->setStatus($status);
 
         $payment->setSkipOrderProcessing(true);
 
@@ -289,11 +302,16 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         );
 
         //TODO: refactor
-        if($icepayResult->statusCode === "OPEN") {
+        if($icepayResult->status === "OPEN") {
             $payment->setIsTransactionPending(true);
         }
-        if($icepayResult->statusCode === "OK") {
+        else if($icepayResult->status === "OK") {
             $payment->setIsTransactionApproved(true);
+        }
+        else
+        {
+            $payment->setIsTransactionApproved(false);
+            $payment->setIsTransactionPending(false); //TODO: Check if redundant
         }
 
     }
