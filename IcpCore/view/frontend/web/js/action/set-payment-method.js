@@ -24,14 +24,12 @@ define(
              * Checkout for guest and registered customer.
              */
             if (!customer.isLoggedIn()) {
-                serviceUrl = urlBuilder.createUrl('/guest-carts/:quoteId/payment-information', {
-                    quoteId: quote.getQuoteId()
+                serviceUrl = urlBuilder.createUrl('/guest-carts/:cartId/selected-payment-method', {
+                    cartId: quote.getQuoteId()
                 });
                 payload = {
                     cartId: quote.getQuoteId(),
-                    // email: quote.guestEmail,
-                    method: paymentData,
-                    // billingAddress: quote.billingAddress()
+                    method: paymentData
                 };
             } else {
                 serviceUrl = urlBuilder.createUrl('/carts/mine/selected-payment-method', {});

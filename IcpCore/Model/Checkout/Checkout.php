@@ -546,5 +546,20 @@ class Checkout
     }
 
 
+    /**
+     * Prepare quote for guest checkout order submit
+     *
+     * @return $this
+     */
+    protected function prepareGuestQuote()
+    {
+        $quote = $this->_quote;
+        $quote->setCustomerId(null)
+            ->setCustomerEmail($quote->getBillingAddress()->getEmail())
+            ->setCustomerIsGuest(true)
+            ->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
+        return $this;
+    }
+
 
 }
