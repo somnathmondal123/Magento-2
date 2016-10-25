@@ -11,7 +11,7 @@
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">paymentmethod_listing.paymentmethod_listing_data_source</item>
-            <item name="paymentmethods" xsi:type="string">paymentmethod_listing.paymentmethod_listing_data_source</item>
+            <item name="deps" xsi:type="string">paymentmethod_listing.paymentmethod_listing_data_source</item>
         </item>
         <item name="spinner" xsi:type="string">paymentmethod_columns</item>
         <item name="buttons" xsi:type="array">
