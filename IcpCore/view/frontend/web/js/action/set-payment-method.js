@@ -44,9 +44,9 @@ define(
                 serviceUrl, JSON.stringify(payload)
             ).done(
                 function () {
-                    //TODO: change to generic 
-                    //                   $.mage.redirect(window.checkoutConfig.payment.icepay.redirectUrl[quote.paymentMethod().method]);
-                    $.mage.redirect(window.checkoutConfig.payment.icepay.creditcard.redirectUrl);
+                    var paymentMethodName = paymentData.method.replace("icepay_icpcore_", "");
+                    $.mage.redirect(window.checkoutConfig.payment.icepay[paymentMethodName].redirectUrl);
+
                 }
             ).fail(
                 function (response) {
