@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * ICEPAY REST API for PHP
+ *
+ * @version     0.0.2 Magento 2
+ * @license     BSD-2-Clause, see LICENSE.md
+ * @copyright   (c) 2016, ICEPAY B.V. All rights reserved.
+ */
+
 class Icepay_Postback extends Icepay_Api_Base {
 
     public function __construct()

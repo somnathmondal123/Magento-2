@@ -1,9 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: isgn
- * Date: 12.11.2015
- * Time: 14:45
+ * ICEPAY REST API for PHP
+ *
+ * @version     0.0.2 Magento 2
+ * @license     BSD-2-Clause, see LICENSE.md
+ * @copyright   (c) 2016, ICEPAY B.V. All rights reserved.
  */
 
 class Icepay_Webservice_Pay extends Icepay_Webservice_Base {
@@ -236,16 +237,13 @@ class Icepay_Webservice_Pay extends Icepay_Webservice_Base {
 
         $result = $this->client->payment->Checkout((Array)$obj);
 
-		if (!isset($result->Checksum)) {
-
+        if (!isset($result->Checksum)) {
             $message = "Error creating the order";
-            if (isset($result->Checksum) && 0 === strpos($result->Message, 'ERR_'))
-            {
-                $message .= ": ".$result->Message;
+            if (0 === strpos($result->Message, 'ERR_') || 0 === strpos($result->Message, 'IC_ERR')) {
+                $message .= ": " . preg_replace('/[^a-zA-Z0-9_\s]/', '', strip_tags($result->Message));
             }
-
-			throw new Exception($message);
-		}
+            throw new Exception($message);
+        }
 
         /* Return just the payment URL if required */
         if ($getUrlOnly)
