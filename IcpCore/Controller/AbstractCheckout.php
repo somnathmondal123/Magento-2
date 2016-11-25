@@ -82,6 +82,11 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
     protected $_cart;
 
     /**
+     * @var \Magento\Checkout\Model\Type\Onepage
+     */
+    protected $onepage;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -90,6 +95,8 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
      * @param \Magento\Framework\Session\Generic $paypalSession
      * @param \Magento\Framework\Url\Helper\Data $urlHelper
      * @param \Magento\Customer\Model\Url $customerUrl
+     * @param \Magento\Checkout\Model\Cart $cart
+     * @param \Magento\Checkout\Model\Type\Onepage $onepage
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -100,7 +107,9 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
         \Magento\Framework\Session\Generic $icepaySession,
         \Magento\Framework\Url\Helper\Data $urlHelper,
         \Magento\Customer\Model\Url $customerUrl,
-        \Magento\Checkout\Model\Cart $cart
+        \Magento\Checkout\Model\Cart $cart,
+        \Magento\Checkout\Model\Type\Onepage $onepage
+
     ) {
         $this->_customerSession = $customerSession;
         $this->_checkoutSession = $checkoutSession;
@@ -110,6 +119,7 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
         $this->_urlHelper = $urlHelper;
         $this->_customerUrl = $customerUrl;
         $this->_cart = $cart;
+        $this->onepage = $onepage;
         parent::__construct($context);
     }
 

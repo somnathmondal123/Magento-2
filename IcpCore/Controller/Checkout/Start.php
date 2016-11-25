@@ -31,15 +31,18 @@ class Start extends \Icepay\IcpCore\Controller\AbstractCheckout
         try {
             $this->_initCheckout();
 
-//            $customerData = $this->_customerSession->getCustomerDataObject();
-            $quoteCheckoutMethod = $this->_getQuote()->getCheckoutMethod();
-            
-            if ((!$quoteCheckoutMethod || $quoteCheckoutMethod != Onepage::METHOD_REGISTER)
-                && !$this->_objectManager->get('Magento\Checkout\Helper\Data')->isAllowedGuestCheckout(
-                    $this->_getQuote(),
-                    $this->_getQuote()->getStoreId()
+            $customerData = $this->_customerSession->getCustomerDataObject();
+//            $quoteCheckoutMethod = $this->_getQuote()->getCheckoutMethod();
+            $quoteCheckoutMethod = $this->onepage->getCheckoutMethod();
+
+
+            if (!$customerData->getId() && ( (!$quoteCheckoutMethod || $quoteCheckoutMethod != Onepage::METHOD_REGISTER)
+                    && !$this->_objectManager->get('Magento\Checkout\Helper\Data')->isAllowedGuestCheckout(
+                        $this->_getQuote(),
+                        $this->_getQuote()->getStoreId()
+                    ))
                 )
-            ) {
+            {
                 $this->messageManager->addNoticeMessage(
                     __('To check out, please sign in with your email address.')
                 );
