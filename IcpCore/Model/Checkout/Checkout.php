@@ -24,6 +24,11 @@ class Checkout
 {
 
     /**
+     * Gateway actions locked state key
+     */
+    const ICEPAY_ISSUER_KEY = 'issuer';
+
+    /**
      * @var \Magento\Framework\ObjectManagerInterface
      */
     protected $_objectManager;
@@ -377,10 +382,9 @@ class Checkout
         //get ICEPAY payment method code
         $icepayCode = $this->_quote->getPayment()->getMethodInstance()->getIcepayMethodCode();
         //get issuer for ICEPAY payment method
-        $issuer = $this->_quote->getPayment()->getAdditionalInformation('issuer'); //TODO: replace 'issuer' with const; + validation
+        $issuer = addslashes(htmlspecialchars($this->_quote->getPayment()->getAdditionalInformation(self::ICEPAY_ISSUER_KEY)));
 
         $checkoutLanguage = $this->getCheckoutLanguage();
-        //$countryCode = $this->getMerchantCountryCode();
 
         $countryCode = $this->countryProvider->getCountry($this->_quote);
 
