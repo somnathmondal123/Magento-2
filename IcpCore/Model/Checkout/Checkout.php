@@ -383,6 +383,11 @@ class Checkout
         //$countryCode = $this->getMerchantCountryCode();
 
         $countryCode = $this->countryProvider->getCountry($this->_quote);
+
+        //Get module configuration settings
+        $merchantId = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_id', ScopeInterface::SCOPE_STORE);
+        $secretCode = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_secret', ScopeInterface::SCOPE_STORE);
+        $secretCode = $this->_encryptor->decrypt($secretCode);
         
         // prepare ICEPAY Payment Object
         $this->getIcepayApiPaymentObject();
@@ -392,18 +397,13 @@ class Checkout
             ->setLanguage($checkoutLanguage)
             ->setIssuer($issuer)
             ->setPaymentMethod($icepayCode)
-            ->setDescription('test alpha version')
+            ->setDescription('Merchant '. $merchantId. ' OrderID '.$this->_quote->getReservedOrderId())
             ->setCurrency($this->_quote->getBaseCurrencyCode())
             ->setOrderID(($this->_quote->getReservedOrderId()))
-            ->setReference('testref alpha version');
+            ->setReference('Order: '.$this->_quote->getReservedOrderId().', Customer: '. $this->_quote->getCustomerEmail());
 
         // prepare ICEPAY Webservice Object
         $this->getIcepayApiWebserviceObject();
-
-        //Get module configuration settings
-        $merchantId = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_id', ScopeInterface::SCOPE_STORE);
-        $secretCode = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_secret', ScopeInterface::SCOPE_STORE);
-        $secretCode = $this->_encryptor->decrypt($secretCode);
 
         $this->_webserviceObject
             ->setMerchantID($merchantId)
