@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="payment">
-            <group id="icepay_settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="icepay_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Icepay Settings</label>
                 <field id="icepay_step1" translate="label" type="label" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Step 1.</label>
@@ -33,15 +33,15 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <comment>Copy the Secret Code from your ICEPAY account.</comment>
                 </field>
-                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="active" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="icepay_step3" translate="label" type="label" sortOrder="8" showInDefault="1" showInWebsite="0" showInStore="1">
-                    <label>Configuration Information</label>
-                    <!--<frontend_model>Icepay\IcpCore\Model\CheckSettings</frontend_model>-->
-                    <comment>Please read the advanced manual</comment>
-                </field>
+                <!--<field id="icepay_step3" translate="label" type="label" sortOrder="9" showInDefault="1" showInWebsite="0" showInStore="1">-->
+                    <!--<label>Configuration Information</label>-->
+                    <!--&lt;!&ndash;<frontend_model>Icepay\IcpCore\Model\CheckSettings</frontend_model>&ndash;&gt;-->
+                    <!--<comment>Please read the advanced manual</comment>-->
+                <!--</field>-->
             </group>
         </section>
     </system>
