@@ -26,7 +26,7 @@ Installation
 3. Install the module:
 
     ```bash
-    composer require icepay/magento2:dev-master
+    composer require icepay/magento2-module:dev-master
     ```
 4. Enable the module:
 
