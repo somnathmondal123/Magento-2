@@ -1,5 +1,5 @@
 {
-  "name": "icepay/magento2-module",
+  "name": "icepay/icepay-magento2-module",
   "description": "ICEPAY integration for Magento 2",
   "type": "magento2-module",
   "version": "1.0.0-beta2",
