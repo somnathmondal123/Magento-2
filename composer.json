@@ -1,8 +1,9 @@
 {
-  "name": "icepay/icpcore",
+  "name": "icepay/icepay-magento2-module",
   "description": "ICEPAY integration for Magento 2",
   "type": "magento2-module",
-  "version": "1.0.0b2",
+  "version": "1.0.1-alpha1",
+  "minimum-stability": "alpha",
   "homepage": "https://icepay.com/webshop-modules/magento-2/",
   "license": "BSD-2-Clause",
   "authors": [
@@ -43,13 +44,5 @@
     "psr-4": {
       "Icepay\\IcpCore\\": ""
     }
-  },
-  "extra": {
-    "map": [
-      [
-        "*",
-        "Icepay/IcpCore"
-      ]
-    ]
   }
 }

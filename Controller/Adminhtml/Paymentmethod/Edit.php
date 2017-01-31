@@ -13,11 +13,6 @@ class Edit extends \Icepay\IcpCore\Controller\Adminhtml\Paymentmethod
     protected $_coreRegistry = null;
 
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
-     */
-    protected $_resultPageFactory;
-
-    /**
      * @var \Icepay\IcpCore\Model\PaymentmethodFactroy
      */
     protected $_paymentmethodFactory;
@@ -36,7 +31,6 @@ class Edit extends \Icepay\IcpCore\Controller\Adminhtml\Paymentmethod
         \Magento\Framework\Registry $registry,
         \Icepay\IcpCore\Model\PaymentmethodFactory $paymentmethodFactory
     ) {
-        $this->_resultPageFactory = $resultPageFactory;
         $this->_coreRegistry = $registry;
         $this->_paymentmethodFactory = $paymentmethodFactory;
 
@@ -74,7 +68,7 @@ class Edit extends \Icepay\IcpCore\Controller\Adminhtml\Paymentmethod
             $this->_coreRegistry->register('paymentmethod', $paymentmethod);
 
 //            /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
-            $resultPage = $this->_resultPageFactory->create();
+            $resultPage = $this->resultPageFactory->create();
             $resultPage->setActiveMenu('Icepay_IcpCore::paymentmethod')
                 ->addBreadcrumb(__('Payment Methods'), __('Payment Methods'))
                 ->addBreadcrumb(__('Manage Payment Methods'), __('Manage Payment Methods'));

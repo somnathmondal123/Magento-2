@@ -21,7 +21,6 @@ class Cancel extends \Icepay\IcpCore\Controller\AbstractCheckout
 
             $this->_getCheckoutSession()->unsIcepayTransactionData();
             
-            // TODO verify this logic 
             // if there is an order - cancel it
             $orderId = $this->_getCheckoutSession()->getLastOrderId();
             /** @var \Magento\Sales\Model\Order $order */

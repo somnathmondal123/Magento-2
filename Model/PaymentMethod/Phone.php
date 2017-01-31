@@ -163,6 +163,7 @@ class Phone extends IcepayAbstractMethod
             $customAttributeFactory,
             $paymentData,
             $scopeConfig,
+            $storeManager,
             $logger,
             $paymentmethodFactory,
             $countryProvider,

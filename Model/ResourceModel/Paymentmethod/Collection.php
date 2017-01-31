@@ -17,4 +17,60 @@ class Collection extends
     }
 
     protected $_idFieldName = 'paymentmethod_id';
+
+
+    /**
+     * Filter collection by specified store ids
+     *
+     * @param int[]|int $storeId
+     * @return $this
+     */
+    public function addStoreFilter($storeId = null)
+    {
+        $this->addFieldToFilter('main_table.store_id', ['eq' => $storeId]);
+        return $this;
+    }
+
+
+//    /**
+//     * Add store availability filter. Include availability product
+//     * for store website
+//     *
+//     * @param null|string|bool|int|Store $store
+//     * @return $this
+//     */
+//    public function addStoreFilter($store = null)
+//    {
+//        if ($store === null) {
+//            $store = $this->getStoreId();
+//        }
+//        $store = $this->_storeManager->getStore($store);
+//
+//        if ($store->getId() != Store::DEFAULT_STORE_ID) {
+//            $this->setStoreId($store);
+//            $this->_productLimitationFilters['store_id'] = $store->getId();
+//            $this->_applyProductLimitations();
+//        }
+//
+//        return $this;
+//    }
+
+//    /**
+//     * Add website filter to collection
+//     *
+//     * @param null|bool|int|string|array $websites
+//     * @return $this
+//     */
+//    public function addWebsiteFilter($websites = null)
+//    {
+//        if (!is_array($websites)) {
+//            $websites = [$this->_storeManager->getWebsite($websites)->getId()];
+//        }
+//
+//        $this->_productLimitationFilters['website_ids'] = $websites;
+//        $this->_applyProductLimitations();
+//
+//        return $this;
+//    }
+
 }

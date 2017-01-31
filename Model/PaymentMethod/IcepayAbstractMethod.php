@@ -53,6 +53,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
         \Magento\Payment\Helper\Data $paymentData,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Payment\Model\Method\Logger $logger,
         \Icepay\IcpCore\Model\PaymentmethodFactory $paymentmethodFactory,
         \Magento\Payment\Model\Checks\CanUseForCountry\CountryProvider $countryProvider,
@@ -76,6 +77,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
             $data
         );
 
+        $this->_storeManager = $storeManager;
         $this->paymentmethodFactory = $paymentmethodFactory;
         $this->transactionBuilder = $transactionBuilder;
         $this->countryProvider = $countryProvider;
@@ -93,7 +95,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         $this->paymentMethod = $this->paymentmethodFactory
             ->create()
             ->getCollection()
-            ->addFieldToFilter('store_id', '1')
+            ->addFieldToFilter('store_id', (int)$this->getStoreManager()->getStore()->getId())
             ->addFieldToFilter('code', $this->icepayMethodCode)
             ->setPageSize(1)->getFirstItem();
 
@@ -344,5 +346,19 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
             return $this->paymentMethod->getIsActive();
         }
     }
+
+
+    /**
+     * @return \Magento\Store\Model\StoreManagerInterface
+     */
+    private function getStoreManager()
+    {
+        if (null === $this->_storeManager) {
+            $this->_storeManager = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get('Magento\Store\Model\StoreManagerInterface');
+        }
+        return $this->_storeManager;
+    }
+
 
 }

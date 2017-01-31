@@ -184,6 +184,7 @@ class PayPal extends IcepayAbstractMethod
             $customAttributeFactory,
             $paymentData,
             $scopeConfig,
+            $storeManager,
             $logger,
             $paymentmethodFactory,
             $countryProvider,

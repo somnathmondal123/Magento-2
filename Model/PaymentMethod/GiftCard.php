@@ -163,6 +163,7 @@ class GiftCard extends IcepayAbstractMethod
             $customAttributeFactory,
             $paymentData,
             $scopeConfig,
+            $storeManager,
             $logger,
             $paymentmethodFactory,
             $countryProvider,
