@@ -18,11 +18,10 @@ class Save extends \Icepay\IcpCore\Controller\Adminhtml\Paymentmethod
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     )
     {
-        $this->formKeyValidator = $formKeyValidator;
+        $this->formKeyValidator = $context->getFormKeyValidator();
         $this->paymentmethodFactory = $paymentmethodFactory;
         $this->transportBuilder = $transportBuilder;
         $this->inlineTranslation = $inlineTranslation;

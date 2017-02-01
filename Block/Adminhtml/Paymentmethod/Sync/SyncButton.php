@@ -26,14 +26,12 @@ class SyncButton implements ButtonProviderInterface
      * Constructor
      *
      * @param \Magento\Backend\Block\Widget\Context $context
-     * @param \Magento\Framework\Registry $registry
      */
     public function __construct(
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Backend\Block\Widget\Context $context
     ) {
         $this->authorization = $context->getAuthorization();
-        $this->storeManager = $storeManager;
+        $this->storeManager = $context->getStoreManager();
         $this->context = $context;
     }
 
