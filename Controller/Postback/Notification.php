@@ -44,7 +44,6 @@ class Notification extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Sales\Model\Order $order
-//        \Magento\Quote\Model\Quote $quote
     )
     {
         $this->_encryptor = $encryptor;
@@ -57,54 +56,50 @@ class Notification extends \Magento\Framework\App\Action\Action
     public function execute()
     {
 
+        try {
+            $orderID = preg_replace('/[^a-zA-Z0-9_\s]/', '', strip_tags($this->getRequest()->getParam('OrderID')));
 
-//        $this->response = $this->getRequest()->getParams();
-//        $this->response = array_change_key_case($this->response, CASE_LOWER);
-
-        if ($this->initIcepayPostback()) {
-            $this->order->loadByIncrementId($this->icepayPostback->getOrderID());
+            $this->order->loadByIncrementId($orderID);
             if (!$this->order->getId()) {
-                //Faild to load order by id
-                $this->getResponse()->setStatusHeader(404, '1.1', 'Not Found');
-                $this->getResponse()->setHeader('Status', '404 File not found');
                 throw new \Magento\Framework\Exception\LocalizedException(__('Order not found'));
-            }
+            };
 
-//            $this->quote->load($this->order->getQuoteId());
+            if ($this->initIcepayPostback($this->order->getStore())) {
 
+                $this->order->loadByIncrementId($this->icepayPostback->getOrderID());
 
-            switch ($this->icepayPostback->getStatus()) {
-                case Icepay_StatusCode::OPEN:
-                    $this->order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
-                    $this->order->setStatus('processing');
-                    $this->order->setIsNotified(false);
-                    $this->order->save();
-                    break;
-                case Icepay_StatusCode::SUCCESS:
-                    $this->order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
-                    $this->order->setStatus('processing');
-                    $this->order->save();
-//                    $this->order->setIsNotified(false);
-                    break;
-                case Icepay_StatusCode::ERROR:
-                    $this->order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
-                    $this->order->setStatus('processing');
-
-                    if ($this->order->canCancel()) {
-                        $this->order->cancel();
-
-                        $this->order->setStatus('canceled');
-
+                switch ($this->icepayPostback->getStatus()) {
+                    case Icepay_StatusCode::OPEN:
+                        $this->order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+                        $this->order->setStatus('processing');
+                        $this->order->setIsNotified(false);
                         $this->order->save();
-                    }
+                        break;
+                    case Icepay_StatusCode::SUCCESS:
+                        $this->order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $this->order->setStatus('processing');
+                        $this->order->save();
+//                    $this->order->setIsNotified(false);
+                        break;
+                    case Icepay_StatusCode::ERROR:
+                        $this->order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
+                        $this->order->setStatus('processing');
 
-                    break;
+                        if ($this->order->canCancel()) {
+                            $this->order->cancel();
+                            $this->order->setStatus('canceled');
+                            $this->order->save();
+                        }
+
+                        break;
+                }
             }
-
-
-//                $order->setState($state)->setStatus($status);
-
+        } catch (Exception $e) {
+            //TODO: error log
+            $this->getResponse()->setStatusHeader(404, '1.1', 'Not Found');
+            $this->getResponse()->setHeader('Status', '404 File not found');
         }
+
     }
 
 
@@ -113,13 +108,14 @@ class Notification extends \Magento\Framework\App\Action\Action
      *
      * @param Icepay_Result $icepayResult
      */
-    public function initIcepayPostback()
+    public
+    function initIcepayPostback($store)
     {
 
         $icepayPostback = $this->_objectManager->create('Icepay_Postback');
 
-        $merchantId = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_id', ScopeInterface::SCOPE_STORE);
-        $secretCode = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_secret', ScopeInterface::SCOPE_STORE);
+        $merchantId = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_id', ScopeInterface::SCOPE_STORE, $store);
+        $secretCode = $this->_scopeConfig->getValue('payment/icepay_settings/merchant_secret', ScopeInterface::SCOPE_STORE, $store);
         $secretCode = $this->_encryptor->decrypt($secretCode);
 
         $postback = $icepayPostback->setMerchantID($merchantId)->setSecretCode($secretCode);

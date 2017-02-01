@@ -4,36 +4,36 @@
         <section id="payment">
             <group id="icepay_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Icepay Settings</label>
-                <field id="icepay_step1" translate="label" type="label" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="icepay_step1" translate="label" type="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Step 1.</label>
                 </field>
-                <field id="merchant_url_ok" translate="label" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="merchant_url_ok" translate="label" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>URL for Success</label>
                     <frontend_model>Icepay\IcpCore\Block\System\Config\Form\Field\SuccessUrlField</frontend_model>
                 </field>
-                <field id="merchant_url_err" translate="label" sortOrder="3" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="merchant_url_err" translate="label" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>URL for Error</label>
                     <frontend_model>Icepay\IcpCore\Block\System\Config\Form\Field\ErrorUrlField</frontend_model>
                 </field>
-                <field id="merchant_url_notify" translate="label" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="merchant_url_notify" translate="label" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>URL for Postback/Notify</label>
                     <frontend_model>Icepay\IcpCore\Block\System\Config\Form\Field\PostbackUrlField</frontend_model>
                 </field>
-                <field id="icepay_step2" translate="label" type="label" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="icepay_step2" translate="label" type="label" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Step 2.</label>
                 </field>
-                <field id="merchant_id" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="merchant_id" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Merchant ID</label>
                     <validate>validate-number validate-length minimum-length-5 maximum-length-8</validate>
                     <comment>Copy the Merchant ID from your ICEPAY account.</comment>
                 </field>
-                <field id="merchant_secret" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="merchant_secret" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Secret Code</label>
                     <!--<validate>validate-alphanum validate-length minimum-length-40 maximum-length-40</validate>-->
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <comment>Copy the Secret Code from your ICEPAY account.</comment>
                 </field>
-                <field id="active" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="0" showInStore="1">
+                <field id="active" translate="label" type="select" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>

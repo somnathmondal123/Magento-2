@@ -15,12 +15,13 @@
         </item>
         <item name="spinner" xsi:type="string">paymentmethod_columns</item>
         <item name="buttons" xsi:type="array">
-            <item name="sync" xsi:type="array">
-                <item name="name" xsi:type="string">sync</item>
-                <item name="label" xsi:type="string" translate="true">Sync</item>
-                <item name="class" xsi:type="string">primary</item>
-                <item name="url" xsi:type="string">*/*/sync</item>
-            </item>
+            <item name="sync" xsi:type="string">Icepay\IcpCore\Block\Adminhtml\Paymentmethod\Sync\SyncButton</item>
+            <!--<item name="sync2" xsi:type="array">-->
+                <!--<item name="name" xsi:type="string">sync</item>-->
+                <!--<item name="label" xsi:type="string" translate="true">Sync2</item>-->
+                <!--<item name="class" xsi:type="string">primary</item>-->
+                <!--<item name="url" xsi:type="string">*/*/sync</item>-->
+            <!--</item>-->
         </item>
     </argument>
 
@@ -65,6 +66,38 @@
                 </item>
             </argument>
         </bookmark>
+
+        <filters name="listing_filters">
+            <!-- If you need to apply custom filter render you can use these tag -->
+            <!--<argument name="data" xsi:type="array">-->
+                <!--<item name="config" xsi:type="array">-->
+                    <!--<item name="templates" xsi:type="array">-->
+                        <!--<item name="filters" xsi:type="array">-->
+                            <!--<item name="select" xsi:type="array">-->
+                                <!--<item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>-->
+                                <!--<item name="template" xsi:type="string">ui/grid/filters/elements/ui-select</item>-->
+                            <!--</item>-->
+                        <!--</item>-->
+                    <!--</item>-->
+                <!--</item>-->
+            <!--</argument>-->
+            <!-- custom filter, Expected is one of ( filterInput, filterRange, filterSelect, containerConfiguration ) -->
+            <filterSelect name="store_id">
+                <argument name="optionsProvider" xsi:type="configurableObject">
+                    <argument name="class" xsi:type="string">Magento\Cms\Ui\Component\Listing\Column\Cms\Options</argument>
+                </argument>
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="provider" xsi:type="string">${ $.parentName }</item>
+                        <!-- data that will be sent to server -->
+                        <item name="dataScope" xsi:type="string">store_id</item>
+                        <item name="label" xsi:type="string" translate="true">Store Viewx</item>
+                        <!-- default value -->
+                        <item name="captionValue" xsi:type="string">0</item>
+                    </item>
+                </argument>
+            </filterSelect>
+        </filters>
 
         <!-- Mass action -->
         <massaction name="listing_massaction">
@@ -170,6 +203,29 @@
             </argument>
         </column>
 
+
+        <!-- Name Column -->
+        <column name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="label" xsi:type="string" translate="true">Name</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Display Name Column -->
+        <column name="display_name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="label" xsi:type="string" translate="true">Display Name</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </column>
+
         <!-- Is Active Column -->
         <column name="is_active">
             <argument name="data" xsi:type="array">
@@ -189,32 +245,28 @@
                     <item name="editor" xsi:type="string">select</item>
                     <item name="dataType" xsi:type="string">select</item>
                     <item name="label" xsi:type="string" translate="true">Status</item>
-                    <item name="sortOrder" xsi:type="number">20</item>
-                </item>
-            </argument>
-        </column>
-
-
-        <!-- Name Column -->
-        <column name="name">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">textRange</item>
-                    <item name="sorting" xsi:type="string">asc</item>
-                    <item name="label" xsi:type="string" translate="true">Name</item>
-                    <item name="sortOrder" xsi:type="number">30</item>
-                </item>
-            </argument>
-        </column>
-
-        <!-- Display Name Column -->
-        <column name="display_name">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">textRange</item>
-                    <item name="sorting" xsi:type="string">asc</item>
-                    <item name="label" xsi:type="string" translate="true">Display Name</item>
                     <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Store ID Column -->
+        <column name="store_id" class="Icepay\IcpCore\Ui\Component\Listing\Column\StoreView">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Store View</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Website ID Column -->
+        <column name="website_id" class="Icepay\IcpCore\Ui\Component\Listing\Column\Website">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Website</item>
+                    <item name="sortable" xsi:type="boolean">true</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
                 </item>
             </argument>
         </column>
@@ -226,6 +278,7 @@
                     <item name="resizeEnabled" xsi:type="boolean">false</item>
                     <item name="resizeDefaultWidth" xsi:type="string">107</item>
                     <item name="indexField" xsi:type="string">paymentmethod_id</item>
+                    <item name="sortOrder" xsi:type="number">70</item>
                 </item>
             </argument>
         </actionsColumn>
