@@ -59,7 +59,30 @@ class SyncButton implements ButtonProviderInterface
      */
     public function getSyncUrl()
     {
-        return $this->storeManager->getStore()->getUrl('*/*/sync', ['_current' => true]);
+        $params = array('_current' => true);
+
+        if ($this->context->getRequest()->getParam('store')) {
+            $params['store'] = (int)$this->context->getRequest()->getParam('store');
+        }
+        else if ($this->context->getRequest()->getParam('website'))
+        {
+            $params['website'] = (int)$this->context->getRequest()->getParam('website');
+        }
+
+        return $this->getUrl('*/*/sync', $params);
+
+    }
+
+    /**
+     * Generate url by route and parameters
+     *
+     * @param string $route
+     * @param array $params
+     * @return string
+     */
+    public function getUrl($route = '', $params = [])
+    {
+        return $this->context->getUrlBuilder()->getUrl($route, $params);
     }
 
 
