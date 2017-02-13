@@ -55,6 +55,8 @@ class Notification extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
+        if($this->getRequest()->isGet())
+            return;
 
         try {
             $orderID = preg_replace('/[^a-zA-Z0-9_\s]/', '', strip_tags($this->getRequest()->getParam('OrderID')));
@@ -94,7 +96,7 @@ class Notification extends \Magento\Framework\App\Action\Action
                         break;
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             //TODO: error log
             $this->getResponse()->setStatusHeader(404, '1.1', 'Not Found');
             $this->getResponse()->setHeader('Status', '404 File not found');
