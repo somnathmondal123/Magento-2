@@ -129,15 +129,11 @@ class PaymentmethodRepository implements PaymentmethodRepositoryInterface
         $searchResults->setSearchCriteria($criteria);
 
         $collection = $this->paymentmethodCollectionFactory->create();
-        foreach ($criteria->getFilterGroups() as $filterGroup) {
-            foreach ($filterGroup->getFilters() as $filter) {
-                if ($filter->getField() === 'store_id') {
-                    $collection->addStoreFilter($filter->getValue(), false);
-                    continue;
-                }
-                $condition = $filter->getConditionType() ?: 'eq';
-                $collection->addFieldToFilter($filter->getField(), [$condition => $filter->getValue()]);
-            }
+
+        //Add filters from root filter group to the collection
+        /** @var FilterGroup $group */
+        foreach ($criteria->getFilterGroups() as $group) {
+            $this->addFilterGroupToCollection($group, $collection);
         }
         $searchResults->setTotalCount($collection->getSize());
         $sortOrders = $criteria->getSortOrders();
@@ -152,22 +148,32 @@ class PaymentmethodRepository implements PaymentmethodRepositoryInterface
         }
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        $paymentmethods = [];
-        /** @var Paymentmethod $paymentmethodModel */
-        foreach ($collection as $paymentmethodModel) {
-            $paymentmethodData = $this->dataPaymentmethodFactory->create();
-            $this->dataObjectHelper->populateWithArray(
-                $paymentmethodData,
-                $paymentmethodModel->getData(),
-                'Icepay\IcpCore\Api\Data\PaymentmethodInterface'
-            );
-            $paymentmethods[] = $this->dataObjectProcessor->buildOutputDataArray(
-                $paymentmethodData,
-                'Icepay\IcpCore\Api\Data\PaymentmethodInterface'
-            );
-        }
-        $searchResults->setItems($paymentmethods);
+        $searchResults->setItems($collection->getItems());
+
         return $searchResults;
+    }
+
+    /**
+     * Helper function that adds a FilterGroup to the collection.
+     *
+     * @param \Magento\Framework\Api\Search\FilterGroup $filterGroup
+     * @param Collection $collection
+     * @return void
+     */
+    protected function addFilterGroupToCollection(
+        \Magento\Framework\Api\Search\FilterGroup $filterGroup,
+        \Icepay\IcpCore\Model\ResourceModel\Paymentmethod\Collection $collection
+    ) {
+        $fields = [];
+        $conditions = [];
+        foreach ($filterGroup->getFilters() as $filter) {
+            $condition = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
+            $fields[] = $filter->getField();
+            $conditions[] = [$condition => $filter->getValue()];
+        }
+        if ($fields) {
+            $collection->addFieldToFilter($fields, $conditions);
+        }
     }
 
 

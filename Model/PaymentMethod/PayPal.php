@@ -5,15 +5,6 @@
  */
 namespace Icepay\IcpCore\Model\PaymentMethod;
 
-//use Icepay\IcpCore\Model\PaymentMethod;
-//use Magento\Paypal\Model\Api\ProcessableException as ApiProcessableException;
-//use Magento\Paypal\Model\Express\Checkout as ExpressCheckout;
-//use Magento\Sales\Api\Data\OrderPaymentInterface;
-//use Magento\Sales\Model\Order\Payment;
-//use Magento\Sales\Model\Order\Payment\Transaction;
-//use Magento\Quote\Model\Quote;
-//use Magento\Store\Model\ScopeInterface;
-
 
 use Icepay\IcpCore\Model\Icepay;
 use Icepay\IcpCore\Model\Issuer;
@@ -163,7 +154,9 @@ class PayPal extends IcepayAbstractMethod
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
         \Icepay\IcpCore\Model\IssuerFactory $issuerFactory,
-        \Icepay\IcpCore\Model\PaymentmethodFactory $paymentmethodFactory,
+        \Icepay\IcpCore\Api\PaymentmethodRepositoryInterface $paymentmethodRepository,
+        \Magento\Framework\Api\FilterBuilder $filterBuilder,
+        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\Module\ModuleListInterface $moduleList,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Payment\Model\Checks\CanUseForCountry\CountryProvider $countryProvider,
@@ -186,7 +179,9 @@ class PayPal extends IcepayAbstractMethod
             $scopeConfig,
             $storeManager,
             $logger,
-            $paymentmethodFactory,
+            $paymentmethodRepository,
+            $filterBuilder,
+            $searchCriteriaBuilder,
             $countryProvider,
             $moduleList,
             $localeDate,
