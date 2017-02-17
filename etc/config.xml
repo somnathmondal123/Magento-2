@@ -11,7 +11,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\CreditCard</model>
                 <payment_action>order</payment_action>
                 <title>Credit Card</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_creditcard>
@@ -20,7 +19,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\IDeal</model>
                 <payment_action>order</payment_action>
                 <title>Ideal</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_ideal>
@@ -29,7 +27,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\PayPal</model>
                 <payment_action>order</payment_action>
                 <title>PayPal</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_paypal>
@@ -38,7 +35,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\GiroPay</model>
                 <payment_action>order</payment_action>
                 <title>GiroPay</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_giropay>
@@ -47,7 +43,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\DirectDebit</model>
                 <payment_action>order</payment_action>
                 <title>Direct Debit</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_directdebit>
@@ -56,7 +51,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\MisterCash</model>
                 <payment_action>order</payment_action>
                 <title>MisterCash</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_mistercash>
@@ -65,7 +59,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\GiftCard</model>
                 <payment_action>order</payment_action>
                 <title>Gift Card</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_giftcard>
@@ -74,7 +67,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\Paysafecard</model>
                 <payment_action>order</payment_action>
                 <title>paysafecard</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_paysafecard>
@@ -83,7 +75,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\Phone</model>
                 <payment_action>order</payment_action>
                 <title>Phone</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_phone>
@@ -92,7 +83,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\Sms</model>
                 <payment_action>order</payment_action>
                 <title>SMS</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_sms>
@@ -101,7 +91,6 @@
                 <model>Icepay\IcpCore\Model\PaymentMethod\WireTransfer</model>
                 <payment_action>order</payment_action>
                 <title>Wire Transfer</title>
-                <api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
                 <allowspecific>0</allowspecific>
                 <group>icepay</group>
             </icepay_icpcore_wiretransfer>

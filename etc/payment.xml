@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+
+    <groups>
+        <group id="icepay">
+            <label>ICEPAY Payment Methods</label>
+        </group>
+    </groups>
+    <methods>
+        <method name="icepay_icpcore_creditcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_ideal">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_paypal">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_giropay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_directdebit">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_mistercash">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_giftcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_paysafecard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_phone">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_sms">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="icepay_icpcore_wiretransfer">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+    </methods>
+</payment>
+
