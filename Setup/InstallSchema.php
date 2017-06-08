@@ -206,7 +206,7 @@ class InstallSchema implements InstallSchemaInterface
             ->addForeignKey(
                 $installer->getFkName($issuerTable, 'paymentmethod_id', $paymentmethodTable, 'paymentmethod_id'),
                 'paymentmethod_id',
-                $paymentmethodTable,
+                $installer->getTable($paymentmethodTable),
                 'paymentmethod_id',
                 \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
             );
