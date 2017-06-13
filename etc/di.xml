@@ -33,4 +33,16 @@
             <argument name="resourceModel" xsi:type="string">Icepay\IcpCore\Model\ResourceModel\Paymentmethod</argument>
         </arguments>
     </virtualType>
+    <virtualType name="icepayLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers"  xsi:type="array">
+                <item name="debug" xsi:type="object">Icepay\IcpCore\Logger\Handler\Icepay</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Icepay\IcpCore\Controller\Postback\Notification">
+        <arguments>
+            <argument name="logger" xsi:type="object">icepayLogger</argument>
+        </arguments>
+    </type>
 </config>
