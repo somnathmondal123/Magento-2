@@ -8,10 +8,10 @@ namespace Icepay\IcpCore\Model\PaymentMethod;
 
 require_once(dirname(__FILE__).'/../restapi/src/Icepay/API/Autoloader.php');
 
-use Magento\Framework\Webapi\Exception;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Framework\DataObject;
+use \Magento\Framework\Exception\LocalizedException;
 
 
 class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
@@ -261,7 +261,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $icepayTransactionData = $this->_checkoutSession->getIcepayTransactionData();
         if (!isset($icepayTransactionData)) {
-            throw new \Exception('ICEPAY result is not set. Order is canceled or already created.');
+            throw new LocalizedException(__('ICEPAY result is not set. Order is canceled or already created.'));
         } else {
             $this->_importToPayment($icepayTransactionData, $payment);
         }
@@ -269,8 +269,8 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         $order = $payment->getOrder();
         $orderTransactionId = $payment->getTransactionId();
 
-        $state = \Magento\Sales\Model\Order::STATE_PROCESSING;
-        $status = 'processing';
+//        $state = \Magento\Sales\Model\Order::STATE_PROCESSING;
+//        $status = 'processing';
 
         $formattedPrice = $order->getBaseCurrency()->formatTxt($amount);
         if ($payment->getIsTransactionPending()) {
@@ -281,7 +281,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         {
             $message = __('Ordered amount of %1', $formattedPrice);
         }
-        else throw new \Exception('Invalid order status sent');
+        else throw new LocalizedException(__('Invalid order status sent'));
 
         $payment->setParentTransactionId($orderTransactionId);
 

@@ -104,6 +104,13 @@ class Notification extends \Magento\Framework\App\Action\Action
                     $this->order->save();
                     break;
                 case Icepay_StatusCode::SUCCESS:
+
+                    if (!$this->order->getEmailSent() && $this->configAccount->getOrderConfirmationEmail($store)) {
+                        $this->orderSender->send($this->order);
+                    }
+                    
+                    //addStatusHistoryComment
+                    
                     $this->order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                     $this->order->setStatus('processing');
                     $this->order->save();
@@ -135,8 +142,7 @@ class Notification extends \Magento\Framework\App\Action\Action
      *
      * @param Icepay_Result $icepayResult
      */
-    public
-    function initIcepayPostback($store)
+    public function initIcepayPostback($store)
     {
 
         $icepayPostback = $this->_objectManager->create('Icepay_Postback');

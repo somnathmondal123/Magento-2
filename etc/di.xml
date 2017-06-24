@@ -6,6 +6,7 @@
     <preference for="Icepay\IcpCore\Api\Data\PaymentmethodSearchResultsInterface"
                 type="Magento\Framework\Api\SearchResults" />
     <preference for="Icepay\IcpCore\Api\Data\PaymentmethodInterface" type="Icepay\IcpCore\Model\Paymentmethod" />
+    <preference for="Icepay\IcpCore\Api\PostbackNotificationInterface" type="Icepay\IcpCore\Model\PostbackNotification"/>
     <virtualType name="PaymentmethodGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
         <arguments>
             <argument name="collection" xsi:type="object" shared="false">Icepay\IcpCore\Model\ResourceModel\Paymentmethod\Collection</argument>
@@ -40,7 +41,7 @@
             </argument>
         </arguments>
     </virtualType>
-    <type name="Icepay\IcpCore\Controller\Postback\Notification">
+    <type name="Icepay\IcpCore\Model\PostbackNotification">
         <arguments>
             <argument name="logger" xsi:type="object">icepayLogger</argument>
         </arguments>
