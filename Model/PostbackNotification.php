@@ -9,6 +9,7 @@ use Icepay\IcpCore\Api\PostbackNotificationInterface;
 use Magento\Store\Model\ScopeInterface;
 use Icepay_StatusCode;
 use Psr\Log\LoggerInterface;
+use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 
@@ -44,6 +45,11 @@ class PostbackNotification implements PostbackNotificationInterface
     protected $order;
 
     /**
+     * @var OrderSender
+     */
+    protected $orderSender;
+
+    /**
      * @var \Magento\Framework\Webapi\Request $request
      */
     public $request;
@@ -57,6 +63,7 @@ class PostbackNotification implements PostbackNotificationInterface
      * @param \Magento\Framework\App\Config\ScopeConfigInterface
      * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
      * @param \Magento\Sales\Model\Order $order
+     * @param OrderSender $orderSender
      * @param \Magento\Framework\Webapi\Request $request
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param LoggerInterface $logger
@@ -65,6 +72,7 @@ class PostbackNotification implements PostbackNotificationInterface
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Sales\Model\Order $order,
+        OrderSender $orderSender,
         \Magento\Framework\Webapi\Request $request,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         LoggerInterface $logger
@@ -73,6 +81,7 @@ class PostbackNotification implements PostbackNotificationInterface
         $this->scopeConfig = $scopeConfig;
         $this->encryptor = $encryptor;
         $this->order = $order;
+        $this->orderSender = $orderSender;
         $this->request = $request;
         $this->objectManager = $objectManager;
         $this->logger = $logger;
@@ -102,7 +111,7 @@ class PostbackNotification implements PostbackNotificationInterface
 
                 //throw NoSuchEntityException::singleField('orderID', $orderID);
                 throw new \Magento\Framework\Webapi\Exception(
-                    sprintf(__('Order %s not found!'), $orderID),
+                    __(sprintf('Order %s not found!', $orderID)),
                     0,
                     \Magento\Framework\Webapi\Exception::HTTP_NOT_FOUND
                 );
@@ -125,11 +134,13 @@ class PostbackNotification implements PostbackNotificationInterface
                     $this->order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
                     $this->order->setStatus('icepay_icpcore_open');
                     $this->order->setIsNotified(false);
+                    $this->orderSender->send($this->order);
                     $this->order->save();
                     break;
                 case Icepay_StatusCode::SUCCESS:
                     $this->order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                     $this->order->setStatus('icepay_icpcore_ok');
+                    $this->orderSender->send($this->order);
                     $this->order->save();
 //                    $this->order->setIsNotified(false);
                     break;
@@ -140,9 +151,9 @@ class PostbackNotification implements PostbackNotificationInterface
                     if ($this->order->canCancel()) {
                         $this->order->cancel();
                         $this->order->setStatus('canceled');
-                        $this->order->save();
                     }
-
+                    $this->orderSender->send($this->order);
+                    $this->order->save();
                     break;
             }
 

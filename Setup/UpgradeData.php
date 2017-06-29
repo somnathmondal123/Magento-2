@@ -4,6 +4,7 @@ namespace Icepay\IcpCore\Setup;
 
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\UpgradeDataInterface;
 use \Magento\Sales\Model\Order;
 
 /**

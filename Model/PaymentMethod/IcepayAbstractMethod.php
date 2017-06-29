@@ -269,17 +269,20 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         $order = $payment->getOrder();
         $orderTransactionId = $payment->getTransactionId();
 
-//        $state = \Magento\Sales\Model\Order::STATE_PROCESSING;
-//        $status = 'processing';
+        $state = \Magento\Sales\Model\Order::STATE_NEW;
+        $status = 'icepay_icpcore_new';
 
         $formattedPrice = $order->getBaseCurrency()->formatTxt($amount);
         if ($payment->getIsTransactionPending()) {
             $message = __('The ordering amount of %1 is pending approval on the payment gateway.', $formattedPrice);
             $state = \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT;
+            $status = 'icepay_icpcore_open';
             $order->setIsNotified(false);
         } else if ($payment->getIsTransactionApproved())
         {
             $message = __('Ordered amount of %1', $formattedPrice);
+            $state = \Magento\Sales\Model\Order::STATE_PROCESSING;
+            $status = 'icepay_icpcore_ok';
         }
         else throw new LocalizedException(__('Invalid order status sent'));
 
@@ -290,11 +293,6 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
             ->setTransactionId($payment->getTransactionId())
             ->build(Transaction::TYPE_ORDER);
         $payment->addTransactionCommentsToOrder($transaction, $message);
-
-//        $stateObject->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
-//        $stateObject->setStatus('pending_payment');
-//        $stateObject->setIsNotified(false);
-
 
         $order->setState($state)->setStatus($status);
 
