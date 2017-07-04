@@ -55,7 +55,7 @@ class PlaceOrder extends \Icepay\IcpCore\Controller\AbstractCheckout
                 return;
             }
         } catch (ApiProcessableException $e) {
-//            $this->_processIcepayApiError($e); //TODO: implement
+//            $this->_processIcepayApiError($e); //TODO: implement, add loggong
             $this->messageManager->addExceptionMessage(
                 $e,
                 __('ICEPAY Gateway Error')

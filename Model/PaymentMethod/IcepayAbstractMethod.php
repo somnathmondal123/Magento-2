@@ -11,7 +11,7 @@ require_once(dirname(__FILE__).'/../restapi/src/Icepay/API/Autoloader.php');
 use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Framework\DataObject;
-use \Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\LocalizedException;
 
 
 class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
@@ -56,7 +56,6 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
      * @var CountryProvider
      */
     protected $countryProvider;
-
 
 
     public function __construct(
@@ -265,36 +264,55 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         } else {
             $this->_importToPayment($icepayTransactionData, $payment);
         }
-
+        
         $order = $payment->getOrder();
-        $orderTransactionId = $payment->getTransactionId();
+        $orderTransactionId = $payment->getTransactionId().'-order';
 
-        $state = \Magento\Sales\Model\Order::STATE_NEW;
-        $status = 'icepay_icpcore_new';
+//        $state = \Magento\Sales\Model\Order::STATE_NEW;
+//        $status = 'icepay_icpcore_new';
 
         $formattedPrice = $order->getBaseCurrency()->formatTxt($amount);
         if ($payment->getIsTransactionPending()) {
             $message = __('The ordering amount of %1 is pending approval on the payment gateway.', $formattedPrice);
             $state = \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT;
             $status = 'icepay_icpcore_open';
-            $order->setIsNotified(false);
-        } else if ($payment->getIsTransactionApproved())
-        {
+
+        } else if ($payment->getIsTransactionApproved()) {
             $message = __('Ordered amount of %1', $formattedPrice);
             $state = \Magento\Sales\Model\Order::STATE_PROCESSING;
-            $status = 'icepay_icpcore_ok';
+            $status = 'icepay_icpcore_ok';;
         }
         else throw new LocalizedException(__('Invalid order status sent'));
 
-        $payment->setParentTransactionId($orderTransactionId);
+        $transaction = $this->transactionBuilder->setPayment($payment)
+            ->setOrder($order)
+            ->setTransactionId($orderTransactionId)
+            ->build(Transaction::TYPE_ORDER);
+        $payment->addTransactionCommentsToOrder($transaction, $message);
+        
+
+        if ($payment->getIsTransactionPending()) {
+            $message = __(
+                'We\'ll authorize the amount of %1 as soon as the payment gateway approves it.',
+                $formattedPrice
+            );
+        } else {
+            $message = __('The authorized amount is %1.', $formattedPrice);
+        }
+
+        $payment->resetTransactionAdditionalInfo();
+
+        $payment->setTransactionId($payment->getTransactionId());
+        $payment->setParentTransactionId($orderTransactionId);;
 
         $transaction = $this->transactionBuilder->setPayment($payment)
             ->setOrder($order)
             ->setTransactionId($payment->getTransactionId())
-            ->build(Transaction::TYPE_ORDER);
+            ->build(Transaction::TYPE_AUTH);
         $payment->addTransactionCommentsToOrder($transaction, $message);
 
-        $order->setState($state)->setStatus($status);
+        $order->setState($state)
+            ->setStatus($status);
 
         $payment->setSkipOrderProcessing(true);
 

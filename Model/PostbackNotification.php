@@ -10,7 +10,7 @@ use Magento\Store\Model\ScopeInterface;
 use Icepay_StatusCode;
 use Psr\Log\LoggerInterface;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 
 
 class PostbackNotification implements PostbackNotificationInterface
@@ -50,6 +50,11 @@ class PostbackNotification implements PostbackNotificationInterface
     protected $orderSender;
 
     /**
+     * @var InvoiceSender
+     */
+    protected $invoiceSender;
+
+    /**
      * @var \Magento\Framework\Webapi\Request $request
      */
     public $request;
@@ -73,6 +78,7 @@ class PostbackNotification implements PostbackNotificationInterface
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Sales\Model\Order $order,
         OrderSender $orderSender,
+        InvoiceSender $invoiceSender,
         \Magento\Framework\Webapi\Request $request,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         LoggerInterface $logger
@@ -82,6 +88,7 @@ class PostbackNotification implements PostbackNotificationInterface
         $this->encryptor = $encryptor;
         $this->order = $order;
         $this->orderSender = $orderSender;
+        $this->invoiceSender = $invoiceSender;
         $this->request = $request;
         $this->objectManager = $objectManager;
         $this->logger = $logger;
@@ -129,33 +136,66 @@ class PostbackNotification implements PostbackNotificationInterface
 
             $this->order->loadByIncrementId($this->icepayPostback->getOrderID());
 
-            switch ($this->icepayPostback->getStatus()) {
-                case Icepay_StatusCode::OPEN:
-                    $this->order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
-                    $this->order->setStatus('icepay_icpcore_open');
-                    $this->order->setIsNotified(false);
-                    $this->orderSender->send($this->order);
-                    $this->order->save();
-                    break;
-                case Icepay_StatusCode::SUCCESS:
-                    $this->order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
-                    $this->order->setStatus('icepay_icpcore_ok');
-                    $this->orderSender->send($this->order);
-                    $this->order->save();
-//                    $this->order->setIsNotified(false);
-                    break;
-                case Icepay_StatusCode::ERROR:
-                    $this->order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
-                    $this->order->setStatus('icepay_icpcore_error');
+            $currentIcepayOrderStatus = $this->getIcepayOrderStatus($this->order->getStatus());
 
-                    if ($this->order->canCancel()) {
-                        $this->order->cancel();
-                        $this->order->setStatus('canceled');
-                    }
-                    $this->orderSender->send($this->order);
-                    $this->order->save();
-                    break;
+            if($this->icepayPostback->canUpdateStatus($currentIcepayOrderStatus) && $this->icepayPostback->getStatus() !== $currentIcepayOrderStatus) {
+                switch ($this->icepayPostback->getStatus()) {
+                    case Icepay_StatusCode::OPEN:
+                        $this->order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
+                        $this->order->setStatus('icepay_icpcore_open');
+                        $this->orderSender->send($this->order);
+                        $this->order->save();
+                        break;
+                    case Icepay_StatusCode::SUCCESS:
+                        $this->order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+                        $this->order->setStatus('icepay_icpcore_ok');
+                        $this->order->save();
+                        break;
+                    case Icepay_StatusCode::ERROR:
+                        $this->order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
+                        $this->order->setStatus('icepay_icpcore_error');
+
+                        if ($this->order->canCancel()) {
+                            $this->order->cancel();
+                            $this->order->setStatus('canceled');
+                        }
+                        $this->orderSender->send($this->order);
+                        $this->order->save();
+                        break;
+                }
             }
+
+            if(!$this->order->getIsNotified())
+            {
+                $this->orderSender->send($this->order, true);
+
+                $history = $this->order->addStatusHistoryComment(__(
+                    'Confirmed the order to the customer via email.'
+                ));
+                $history->setIsCustomerNotified(true);
+                $history->save();
+            }
+
+            if ($this->order->getState() == \Magento\Sales\Model\Order::STATE_PROCESSING && $this->order->canInvoice() && !$this->order->hasInvoices()) {
+
+                /**
+                 * @var \Magento\Sales\Model\Order\Payment $payment
+                 */
+                $payment = $this->order->getPayment();
+                $payment->registerCaptureNotification($this->order->getGrandTotal());
+                $payment->save();
+                $this->order->save();
+
+                foreach ($this->order->getInvoiceCollection() as $invoice) {
+                    $this->invoiceSender->send($invoice, true);
+                    $this->order->addStatusHistoryComment(
+                        __('Notified customer about invoice #%1.', $invoice->getId())
+                    )
+                        ->setIsCustomerNotified(true)
+                        ->save();
+                }
+            }
+
 
         }
         catch (\Magento\Framework\Webapi\Exception $e)
@@ -198,6 +238,26 @@ class PostbackNotification implements PostbackNotificationInterface
         }
         return false;
 
+    }
+
+
+    /**
+     * Get ICEPAY order status by Magento order status
+     */
+    private function getIcepayOrderStatus($magentoOrderStatus)
+    {
+        switch ($magentoOrderStatus)
+        {
+            case "icepay_icpcore_open": return Icepay_StatusCode::OPEN;
+            case "icepay_icpcore_ok": return Icepay_StatusCode::SUCCESS;
+            case "icepay_icpcore_error": return Icepay_StatusCode::ERROR;
+            default:
+                throw new \Magento\Framework\Webapi\Exception(
+                __(sprintf('No mapping found for status: ', $magentoOrderStatus)),
+                0,
+                \Magento\Framework\Webapi\Exception::HTTP_NOT_FOUND
+            );
+        }
     }
 
 }
