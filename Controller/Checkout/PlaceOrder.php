@@ -5,6 +5,7 @@
  * See COPYING.txt for license details.
  */
 namespace Icepay\IcpCore\Controller\Checkout;
+use Magento\TestFramework\Inspection\Exception;
 
 /**
  * Class PlaceOrder
@@ -55,26 +56,27 @@ class PlaceOrder extends \Icepay\IcpCore\Controller\AbstractCheckout
                 return;
             }
         } catch (ApiProcessableException $e) {
-//            $this->_processIcepayApiError($e); //TODO: implement, add loggong
+            $this->logger->debug("PlaceOrder.php: ".$e->getMessage());
             $this->messageManager->addExceptionMessage(
                 $e,
                 __('ICEPAY Gateway Error')
             );
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $this->logger->debug("PlaceOrder.php: ".$e->getMessage());
             $this->messageManager->addExceptionMessage(
                 $e,
                 $e->getMessage()
             );
-//            $this->_redirect('*/*/review');
             $this->_redirect('/');
         } catch (\Exception $e) {
+            $this->logger->debug("PlaceOrder.php: ".$e->getMessage());
             $this->messageManager->addExceptionMessage(
                 $e,
                 __('We can\'t place the order.')
             );
-//            $this->_redirect('*/*/review');
-            $this->_redirect('/');
         }
+
+        $this->_redirect('/');
     }
 
 

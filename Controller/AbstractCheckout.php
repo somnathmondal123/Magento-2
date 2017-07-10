@@ -87,6 +87,11 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
     protected $onepage;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -108,7 +113,9 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
         \Magento\Framework\Url\Helper\Data $urlHelper,
         \Magento\Customer\Model\Url $customerUrl,
         \Magento\Checkout\Model\Cart $cart,
-        \Magento\Checkout\Model\Type\Onepage $onepage
+        \Magento\Checkout\Model\Type\Onepage $onepage,
+        \Psr\Log\LoggerInterface $logger
+
 
     ) {
         $this->_customerSession = $customerSession;
@@ -120,6 +127,7 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
         $this->_customerUrl = $customerUrl;
         $this->_cart = $cart;
         $this->onepage = $onepage;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
