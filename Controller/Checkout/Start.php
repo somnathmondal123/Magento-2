@@ -22,9 +22,15 @@ class Start extends \Icepay\IcpCore\Controller\AbstractCheckout
     public function execute()
     {
 
+        $checkoutSession = $this->_getCheckoutSession();
+
         //TODO: check case with multiple parallel transactions
-        if (!empty($this->_checkoutSession->getIcepayTransactionData())) {
-            $this->_getCheckoutSession()->unsIcepayTransactionData();
+        if (!empty($checkoutSession->getIcepayTransactionData())) {
+            $checkoutSession->unsIcepayTransactionData();
+            $this->reactivateQuote();
+        }
+        else if (!empty($checkoutSession->getIcepayPaymentInProgress() && $checkoutSession->getIcepayPaymentInProgress() )) {
+            $checkoutSession->unsIcepayPaymentInProgress(); //Temporary bugfix
             $this->reactivateQuote();
         }
 
@@ -53,6 +59,7 @@ class Start extends \Icepay\IcpCore\Controller\AbstractCheckout
                 return;
             }
 
+            $checkoutSession->setIcepayPaymentInProgress(true);
             $success = $this->_checkout->start(
                 $this->_url->getUrl('*/*/placeorder'),
                 $this->_url->getUrl('*/*/cancel')
@@ -63,8 +70,10 @@ class Start extends \Icepay\IcpCore\Controller\AbstractCheckout
                 return;
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $checkoutSession->unsIcepayPaymentInProgress();
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
         } catch (\Exception $e) {
+            $checkoutSession->unsIcepayPaymentInProgress();
             $this->messageManager->addExceptionMessage(
                 $e,
                 __('Can\'t start Icepay Checkout. '.$e->getMessage())

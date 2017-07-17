@@ -20,6 +20,7 @@ class Cancel extends \Icepay\IcpCore\Controller\AbstractCheckout
         try {
 
             $this->_getCheckoutSession()->unsIcepayTransactionData();
+            $this->_getCheckoutSession()->unsIcepayPaymentInProgress();
             
             // if there is an order - cancel it
             $orderId = $this->_getCheckoutSession()->getLastOrderId();

@@ -34,6 +34,8 @@ class PlaceOrder extends \Icepay\IcpCore\Controller\AbstractCheckout
             if($this->_checkout->initIcepayResult())
             {
 
+                $this->_getCheckoutSession()->unsIcepayPaymentInProgress();
+                
                 $this->_checkout->place();
 
                 // prepare session to success or cancellation page
