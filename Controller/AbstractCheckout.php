@@ -7,6 +7,7 @@ namespace Icepay\IcpCore\Controller;
 
 use Magento\Checkout\Controller\Express\RedirectLoginInterface;
 use Magento\Framework\App\Action\Action as AppAction;
+use Magento\Sales\Model\Order;
 
 /**
  * Abstract Checkout Controller
@@ -18,31 +19,31 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
     /**
      * @var \Icepay\IcpCore\Model\Checkout\Checkout
      */
-    protected $_checkout;
+    protected $checkout;
 
     /**
      * Internal cache of checkout models
      *
      * @var array
      */
-    protected $_checkoutTypes = [];
+    protected $checkoutTypes = [];
 
     /**
-     * @var \Magento\Paypal\Model\Config
-     */
-    protected $_config;
-
-    /**
-     * @var \Magento\Quote\Model\Quote
-     */
-    protected $_quote = false;
-
-     /**
      * Checkout mode type
      *
      * @var string
      */
-    protected $_checkoutType;
+    protected $checkoutType;
+
+    /**
+     * @var \Magento\Paypal\Model\Config
+     */
+    protected $config;
+
+    /**
+     * @var \Magento\Quote\Model\Quote
+     */
+    protected $quote = false;
 
     /**
      * @var \Magento\Customer\Model\Session
@@ -139,23 +140,23 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
      * @return void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function _initCheckout()
+    protected function initCheckout()
     {
-        $quote = $this->_getQuote();
+        $quote = $this->getQuote();
         if (!$quote->hasItems() || $quote->getHasError()) {
             $this->getResponse()->setStatusHeader(403, '1.1', 'Forbidden');
             throw new \Magento\Framework\Exception\LocalizedException(__('We can\'t initialize ICEPAY Checkout.'));
         }
         //TODO: _config
-        if (!isset($this->_checkoutTypes[$this->_checkoutType])) {
+        if (!isset($this->checkoutTypes[$this->checkoutType])) {
             $parameters = [
                 'params' => [
                     'quote' => $quote,
                 ],
             ];
-            $this->_checkoutTypes[$this->_checkoutType] = $this->_checkoutFactory->create($this->_checkoutType, $parameters);
+            $this->checkoutTypes[$this->checkoutType] = $this->_checkoutFactory->create($this->checkoutType, $parameters);
         }
-        $this->_checkout = $this->_checkoutTypes[$this->_checkoutType];
+        $this->checkout = $this->checkoutTypes[$this->checkoutType];
     }
 
 
@@ -174,7 +175,7 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
      *
      * @return \Magento\Checkout\Model\Session
      */
-    protected function _getCheckoutSession()
+    protected function getCheckoutSession()
     {
         return $this->_checkoutSession;
     }
@@ -184,12 +185,12 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
      *
      * @return \Magento\Quote\Model\Quote
      */
-    protected function _getQuote()
+    protected function getQuote()
     {
-        if (!$this->_quote) {
-            $this->_quote = $this->_getCheckoutSession()->getQuote();
+        if (!$this->quote) {
+            $this->quote = $this->getCheckoutSession()->getQuote();
         }
-        return $this->_quote;
+        return $this->quote;
     }
 
 
@@ -226,28 +227,22 @@ abstract class AbstractCheckout extends AppAction implements RedirectLoginInterf
      */
     public function getRedirectActionName()
     {
-        return 'start';
+        return 'placeorder';
     }
 
 
-    /**
-     * @return bool
-     */
-    protected function reactivateQuote()
+    //TODO: think twice if this function should be here
+    protected function cancelOrder($order, $message)
     {
-        $quote = $this->_getQuote();
-
-        if($quote != null) {
-            
-            $quote->setIsActive(true);
-            $quote->setTriggerRecollect(true);
-            $quote->setReservedOrderId(null);
-
-            if ($this->_cart->setQuote($quote)->save()) {
-                return true;
+        if ($order && $order->getId() && $order->getQuoteId() == $this->getCheckoutSession()->getQuoteId()) {
+            if ($order->getState() != Order::STATE_CANCELED) {
+                $order->registerCancellation($message)->save();
             }
+            return true;
         }
         return false;
     }
+
+
 
 }

@@ -19,29 +19,23 @@ class Cancel extends \Icepay\IcpCore\Controller\AbstractCheckout
     {
         try {
 
-            $this->_getCheckoutSession()->unsIcepayTransactionData();
-            $this->_getCheckoutSession()->unsIcepayPaymentInProgress();
-            
             // if there is an order - cancel it
-            $orderId = $this->_getCheckoutSession()->getLastOrderId();
+            $orderId = $this->getCheckoutSession()->getLastOrderId();
             /** @var \Magento\Sales\Model\Order $order */
             $order = $orderId ? $this->_orderFactory->create()->load($orderId) : false;
-            if ($order && $order->getId() && $order->getQuoteId() == $this->_getCheckoutSession()->getQuoteId()) {
-                $order->cancel()->save();
-                $this->_getCheckoutSession()
-                    ->unsLastQuoteId()
-                    ->unsLastSuccessQuoteId()
-                    ->unsLastOrderId()
-                    ->unsLastRealOrderId();
+
+            if($this->cancelOrder($order, 'ICEPAY Checkout and Order have been canceled.'))
+            {
                 $this->messageManager->addSuccessMessage(
                     __('ICEPAY Checkout and Order have been canceled.')
                 );
+            }
             } else {
-                $this->reactivateQuote();
                 $this->messageManager->addSuccessMessage(
                     __('ICEPAY Checkout has been canceled.')
                 );
             }
+            $this->getCheckoutSession()->restoreQuote();
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
         } catch (\Exception $e) {
@@ -52,5 +46,6 @@ class Cancel extends \Icepay\IcpCore\Controller\AbstractCheckout
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         return $resultRedirect->setPath('checkout/cart');
     }
+
     
 }

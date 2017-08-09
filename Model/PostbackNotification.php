@@ -18,14 +18,14 @@ class PostbackNotification implements PostbackNotificationInterface
 
 
     /**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
-    protected $objectManager;
-
-    /**
      * @var Icepay_Postback
      */
     protected $icepayPostback;
+
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $objectManager;
 
     /**
      * Core store config
@@ -93,6 +93,10 @@ class PostbackNotification implements PostbackNotificationInterface
         $this->objectManager = $objectManager;
         $this->logger = $logger;
 
+        $this->icepayPostback = $this->objectManager->create('Icepay_Postback');
+
+
+
     }
 
 
@@ -124,7 +128,7 @@ class PostbackNotification implements PostbackNotificationInterface
                 );
             };
 
-            if (!$this->initIcepayPostback($this->order->getStore())) {
+            if (!$this->validate($this->order->getStore())) {
                 $this->logger->debug(sprintf('Postback inicialization\validation failed.  %s ', print_r($this->request->getPost(), true)));
 
                 throw new \Magento\Framework\Webapi\Exception(
@@ -215,29 +219,14 @@ class PostbackNotification implements PostbackNotificationInterface
     }
 
 
-    /**
-     * Init Icepay_Result object
-     *
-     * @param Icepay_Result $icepayResult
-     */
-    public function initIcepayPostback($store)
+    protected function validate($store)
     {
-
-        $icepayPostback = $this->objectManager->create('Icepay_Postback');
-
         $merchantId = $this->scopeConfig->getValue('payment/icepay_settings/merchant_id', ScopeInterface::SCOPE_STORE, $store);
-        $secretCode = $this->scopeConfig->getValue('payment/icepay_settings/merchant_secret', ScopeInterface::SCOPE_STORE, $store);
-        $secretCode = $this->encryptor->decrypt($secretCode);
+        $secretCode = $this->encryptor->decrypt($this->scopeConfig->getValue('payment/icepay_settings/merchant_secret', ScopeInterface::SCOPE_STORE, $store));
 
-        $postback = $icepayPostback->setMerchantID($merchantId)->setSecretCode($secretCode);
+        $this->icepayPostback->setMerchantID($merchantId)->setSecretCode($secretCode);
 
-        if ($postback->validate()) {
-
-            $this->icepayPostback = $postback;
-            return true;
-        }
-        return false;
-
+        return (bool) $postback->validate();
     }
 
 

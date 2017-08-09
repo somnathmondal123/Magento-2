@@ -53,6 +53,11 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
     protected $transactionBuilder;
 
     /**
+     * @var ManagerInterface
+     */
+    protected $transactionManager;
+
+    /**
      * @var CountryProvider
      */
     protected $countryProvider;
@@ -76,6 +81,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
+        \Magento\Sales\Model\Order\Payment\Transaction\ManagerInterface $transactionManager,
         array $data = []
     ) {
         parent::__construct(
@@ -96,6 +102,7 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
         $this->filterBuilder = $filterBuilder;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->transactionBuilder = $transactionBuilder;
+        $this->transactionManager = $transactionManager;
         $this->countryProvider = $countryProvider;
 
         $this->_moduleList = $moduleList;
@@ -258,65 +265,37 @@ class IcepayAbstractMethod extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function order(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $icepayTransactionData = $this->_checkoutSession->getIcepayTransactionData();
-        if (!isset($icepayTransactionData)) {
-            throw new LocalizedException(__('ICEPAY result is not set. Order is canceled or already created.'));
-        } else {
-            $this->_importToPayment($icepayTransactionData, $payment);
-        }
+//        $icepayTransactionData = $this->_checkoutSession->getIcepayTransactionData();
+//        if (!isset($icepayTransactionData)) {
+//            throw new LocalizedException(__('ICEPAY result is not set. Order is canceled or already created.'));
+//        } else {
+//            $this->_importToPayment($icepayTransactionData, $payment);
+//        }
         
         $order = $payment->getOrder();
-        $orderTransactionId = $payment->getTransactionId().'-order';
-
-//        $state = \Magento\Sales\Model\Order::STATE_NEW;
-//        $status = 'icepay_icpcore_new';
+        //$orderTransactionId = $payment->getTransactionId().'-order';
 
         $formattedPrice = $order->getBaseCurrency()->formatTxt($amount);
-        if ($payment->getIsTransactionPending()) {
-            $message = __('The ordering amount of %1 is pending approval on the payment gateway.', $formattedPrice);
-            $state = \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT;
-            $status = 'icepay_icpcore_open';
 
-        } else if ($payment->getIsTransactionApproved()) {
-            $message = __('Ordered amount of %1', $formattedPrice);
-            $state = \Magento\Sales\Model\Order::STATE_PROCESSING;
-            $status = 'icepay_icpcore_ok';;
-        }
-        else throw new LocalizedException(__('Invalid order status sent'));
-
-        $transaction = $this->transactionBuilder->setPayment($payment)
-            ->setOrder($order)
-            ->setTransactionId($orderTransactionId)
-            ->build(Transaction::TYPE_ORDER);
-        $payment->addTransactionCommentsToOrder($transaction, $message);
         
+            $message = __('Ordered amount of %1', $formattedPrice);
+            $state = \Magento\Sales\Model\Order::STATE_NEW;
+            $status = 'icepay_icpcore_new';
 
-        if ($payment->getIsTransactionPending()) {
-            $message = __(
-                'We\'ll authorize the amount of %1 as soon as the payment gateway approves it.',
-                $formattedPrice
-            );
-        } else {
-            $message = __('The authorized amount is %1.', $formattedPrice);
-        }
 
-        $payment->resetTransactionAdditionalInfo();
+//        $transactionId = $this->transactionManager->generateTransactionId($payment, Transaction::TYPE_ORDER);
 
-        $payment->setTransactionId($payment->getTransactionId());
-        $payment->setParentTransactionId($orderTransactionId);;
 
         $transaction = $this->transactionBuilder->setPayment($payment)
             ->setOrder($order)
-            ->setTransactionId($payment->getTransactionId())
-            ->build(Transaction::TYPE_AUTH);
+//            ->setTransactionId($transactionId)
+            ->build(Transaction::TYPE_ORDER);
         $payment->addTransactionCommentsToOrder($transaction, $message);
 
         $order->setState($state)
             ->setStatus($status);
 
         $payment->setSkipOrderProcessing(true);
-
-        $this->_checkoutSession->unsIcepayTransactionData();
 
         return $this;
     }
