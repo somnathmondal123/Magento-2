@@ -142,18 +142,30 @@ class PostbackNotification implements PostbackNotificationInterface
 
             $currentIcepayOrderStatus = $this->getIcepayOrderStatus($this->order->getStatus());
 
-            if($this->icepayPostback->canUpdateStatus($currentIcepayOrderStatus) && $this->icepayPostback->getStatus() !== $currentIcepayOrderStatus) {
+            if(($currentIcepayOrderStatus === "NEW" || $this->icepayPostback->canUpdateStatus($currentIcepayOrderStatus)) && $this->icepayPostback->getStatus() !== $currentIcepayOrderStatus) {
                 switch ($this->icepayPostback->getStatus()) {
                     case Icepay_StatusCode::OPEN:
                         $this->order->setState(\Magento\Sales\Model\Order::STATE_PENDING_PAYMENT);
                         $this->order->setStatus('icepay_icpcore_open');
                         $this->orderSender->send($this->order);
                         $this->order->save();
+
+                        $history = $this->order->addStatusHistoryComment(__(
+                            'Transaction status has changed to OPEN.'
+                        ));
+                        $history->save();
+
                         break;
                     case Icepay_StatusCode::SUCCESS:
                         $this->order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
                         $this->order->setStatus('icepay_icpcore_ok');
                         $this->order->save();
+
+                        $history = $this->order->addStatusHistoryComment(__(
+                            'Order has been paid successfully.'
+                        ));
+                        $history->save();
+
                         break;
                     case Icepay_StatusCode::ERROR:
                         $this->order->setState(\Magento\Sales\Model\Order::STATE_CANCELED);
@@ -165,6 +177,12 @@ class PostbackNotification implements PostbackNotificationInterface
                         }
                         $this->orderSender->send($this->order);
                         $this->order->save();
+
+                        $history = $this->order->addStatusHistoryComment(__(
+                            'Order was cancelled due to a system error.'
+                        ));
+                        $history->save();
+
                         break;
                 }
             }
@@ -226,7 +244,7 @@ class PostbackNotification implements PostbackNotificationInterface
 
         $this->icepayPostback->setMerchantID($merchantId)->setSecretCode($secretCode);
 
-        return (bool) $postback->validate();
+        return (bool) $this->icepayPostback->validate();
     }
 
 
@@ -237,6 +255,7 @@ class PostbackNotification implements PostbackNotificationInterface
     {
         switch ($magentoOrderStatus)
         {
+            case "icepay_icpcore_new": return "NEW";
             case "icepay_icpcore_open": return Icepay_StatusCode::OPEN;
             case "icepay_icpcore_ok": return Icepay_StatusCode::SUCCESS;
             case "icepay_icpcore_error": return Icepay_StatusCode::ERROR;

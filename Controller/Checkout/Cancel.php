@@ -30,11 +30,14 @@ class Cancel extends \Icepay\IcpCore\Controller\AbstractCheckout
                     __('ICEPAY Checkout and Order have been canceled.')
                 );
             }
-            } else {
+            else
+            {
                 $this->messageManager->addSuccessMessage(
                     __('ICEPAY Checkout has been canceled.')
                 );
             }
+
+
             $this->getCheckoutSession()->restoreQuote();
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
