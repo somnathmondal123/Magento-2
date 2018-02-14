@@ -1,6 +1,6 @@
 ![]( https://icepay.com/app/themes/icepay/dist/images/logos/logo_icepay.svg)
 
-Payment Module for Magento 2
+ICEPAY Magento 2 Payment Module
 ============================
 
 Make payments in your Magento 2 webshop possible. Download the special Magento 2 webshop module [here](https://github.com/ICEPAY/Magento-2/releases), and you will be able to offer the most frequently used national and international online payment methods.
