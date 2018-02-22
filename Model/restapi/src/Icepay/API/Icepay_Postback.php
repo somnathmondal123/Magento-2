@@ -165,12 +165,13 @@ class Icepay_Postback extends Icepay_Api_Base {
             $this->_logger->log("Invalid request method", Icepay_Api_Logger::ERROR);
             return false;
         };
-		
-        $this->_logger->log(sprintf("Postback: %s", serialize($_POST)), Icepay_Api_Logger::TRANSACTION);
+	    
+	/* Changed $_POST to $_REQUEST Because Not Getting postback values */	
+        $this->_logger->log(sprintf("Postback: %s", serialize($_REQUEST)), Icepay_Api_Logger::TRANSACTION);
 
         /* @since version 1.0.2 */
         foreach ($this->getPostbackResponseFields() as $obj => $param) {
-            $this->data->$obj = (isset($_POST[$param])) ? $_POST[$param] : "";
+            $this->data->$obj = (isset($_REQUEST[$param])) ? $_REQUEST[$param] : "";
         }
 
         if ($this->isVersionCheck())
